@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, color 0.3s;
+}
+body.dark-mode {
+    background-color: #333; /* Dark background for dark mode */
+    color: #fff; /* Light text color for dark mode */
+}
+.game-container {
+    text-align: center;
+    background-color: white; /* Light background for game container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+.dark-mode .game-container {
+    background-color: #444; /* Dark background for game container in dark mode */
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+h1 {
+    margin-bottom: 20px; /* Margin below the heading */
+}
+.grid {
+    display: inline-grid;
+    gap: 2px; /* Space between grid cells */
+    background-color: #ccc; /* Light gray background for grid */
+    padding: 2px;
+    border-radius: 5px;
+}
+.cell {
+    width: 20px; /* Width of each cell */
+    height: 20px; /* Height of each cell */
+    border-radius: 2px; /* Rounded corners for cells */
+}
+.color-buttons {
+    margin-top: 20px; /* Space above color buttons */
+}
+.color-button {
+    width: 50px; /* Width of color button */
+    height: 50px; /* Height of color button */
+    margin: 0 5px; /* Margin around color buttons */
+    border: none; /* No border for buttons */
+    border-radius: 50%; /* Circular buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+.color-button:disabled {
+    opacity: 0.5; /* Reduced opacity for disabled buttons */
+    cursor: not-allowed; /* Not-allowed cursor for disabled buttons */
+}
+select, button {
+    margin: 10px; /* Margin around select and button elements */
+    padding: 5px 10px; /* Padding inside select and button elements */
+    background-color: #f0f0f0; /* Light gray background for select and button elements */
+    border: 1px solid #ccc; /* Light gray border for select and button elements */
+    border-radius: 5px; /* Rounded corners for select and button elements */
+    transition: background-color 0.3s, color 0.3s;
+}
+.dark-mode select, .dark-mode button {
+    background-color: #555; /* Dark background for select and button in dark mode */
+    color: #fff; /* Light text color for select and button in dark mode */
+    border-color: #777; /* Darker border for select and button in dark mode */
+}
+.info {
+    margin-bottom: 10px; /* Margin below info elements */
+}
+#darkModeToggle {
+    position: absolute; /* Positioning toggle button absolutely */
+    top: 10px; /* Distance from the top of the viewport */
+    right: 10px; /* Distance from the right of the viewport */
+}
+
+/* Rainbow animation */
+@keyframes rainbow {
+   0% { background-color: red; }
+   14% { background-color: orange; }
+   28% { background-color: yellow; }
+   42% { background-color: green; }
+   57% { background-color: blue; }
+   71% { background-color: indigo; }
+   85% { background-color: violet; }
+   100% { background-color: red; }
+}

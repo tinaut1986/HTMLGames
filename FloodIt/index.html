@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- Changed to English -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood It</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌈</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Button to toggle dark mode -->
+    <button id="darkModeToggle">🌓</button>
+    
+    <div class="game-container">
+        <h1>Flood It</h1>
+        
+        <!-- Difficulty selection -->
+        <div class="info">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        
+        <!-- Display for moves, score, and high score -->
+        <div id="moves" class="info"></div> <!-- Moves -->
+        <div id="score" class="info"></div> <!-- Score -->
+        <div id="highScore" class="info"></div> <!-- High Score -->
+        
+        <!-- Game grid and color buttons -->
+        <div id="grid" class="grid"></div>
+        <div class="color-buttons" id="colorButtons"></div>
+        
+        <!-- Button to restart the game -->
+        <button id="restartButton">Restart</button>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
