@@ -1,0 +1,155 @@
+:root {
+    --bg-color: #f0f0f0; /* Background color */
+    --text-color: #333; /* Text color */
+    --cell-bg: #ddd; /* Cell background color */
+    --cell-revealed: #fff; /* Revealed cell background color */
+    --cell-hover: #eee; /* Hover cell background color */
+    --mine-color: #ff4d4d; /* Mine color */
+    --flag-color: #ffd700; /* Flag color */
+    --questioned-color: #626afc; /* Questioned cell color */
+    --button-bg: #4CAF50; /* Button background color */
+    --button-text: white; /* Button text color */
+}
+
+body.dark-mode {
+    --bg-color: #222; /* Background color in dark mode */
+    --text-color: #fff; /* Text color in dark mode */
+    --cell-bg: #444; /* Cell background color in dark mode */
+    --cell-revealed: #333; /* Revealed cell background color in dark mode */
+    --cell-hover: #555; /* Hover cell background color in dark mode */
+    --mine-color: #ff6b6b; /* Mine color in dark mode */
+    --flag-color: #ffd700; /* Flag color in dark mode */
+    --questioned-color: #626afc; /* Questioned cell color in dark mode */
+    --button-bg: #45a049; /* Button background color in dark mode */
+    --button-text: #fff; /* Button text color in dark mode */
+}
+
+body {
+    font-family: 'Arial', sans-serif; /* Font family for the body */
+    background-color: var(--bg-color); /* Background color using variable */
+    color: var(--text-color); /* Text color using variable */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    transition: background-color 0.3s, color 0.3s; /* Transition for background and text colors */
+}
+
+.game-container {
+    text-align: center; /* Center text alignment for game container */
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background for game container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect for game container */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5em; /* Font size for the header */
+    color: var(--text-color); /* Header text color using variable */
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5em; /* Font size for theme toggle button */
+    cursor: pointer;
+    color: var(--text-color); /* Theme toggle button text color using variable */
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+select, button {
+    padding: 10px 15px; /* Padding for select and button elements */
+    font-size: 16px; 
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    background-color: var(--button-bg); /* Background color using variable for buttons */
+    color: var(--button-text); /* Text color using variable for buttons */
+    transition: background-color 0.3s; /* Transition for button background on hover */
+}
+
+select:hover, button:hover {
+   opacity: 0.9; /* Slightly reduce opacity on hover for select and buttons */
+}
+
+.game-info {
+   display: flex;
+   justify-content: space-between;
+   margin-bottom: 10px;
+   font-size: 1.2em; 
+}
+
+#game-board {
+   display: inline-grid; 
+   gap: 1px; 
+   background-color: var(--cell-bg); 
+   border: 3px solid var(--text-color); 
+   padding: 3px; 
+   border-radius: 5px; 
+}
+
+.cell {
+   width: 30px; 
+   height: 30px; 
+   display:flex ;
+   align-items:center ;
+   justify-content:center ;
+   font-weight:bold ; 
+   cursor:pointer ; 
+   background-color : var(--cell-bg); 
+   border :1px solid rgba(0,0,0,0.1) ; 
+   font-size :18px ; 
+   transition :background-color 0.3s ; 
+}
+
+.cell:hover {
+   background-color :var(--cell-hover); 
+}
+
+.cell.revealed {
+   background-color :var(--cell-revealed); 
+}
+
+.cell.mine {
+   background-color :var(--mine-color); 
+}
+
+.cell.flagged {
+   background-color :var(--flag-color); 
+}
+
+.cell.questioned {
+   background-color :var(--questioned-color); 
+}
+
+/* Color settings based on the value of the cell */
+
+.cell[data-value="1"] { color :blue ; }
+.cell[data-value="2"] { color :green ; }
+.cell[data-value="3"] { color :red ; }
+.cell[data-value="4"] { color :darkblue ; }
+.cell[data-value="5"] { color :darkred ; }
+.cell[data-value="6"] { color :darkcyan ; }
+.cell[data-value="7"] { color :black ; }
+.cell[data-value="8"] { color :gray ; }
+
+#game-status {
+   margin-top :20px ; 
+   font-size :24px ; 
+   font-weight:bold ; 
+}
