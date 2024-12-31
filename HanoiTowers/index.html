@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Towers of Hanoi</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Towers of Hanoi</h1>
+            <button id="darkModeToggle" aria-label="Toggle dark mode"></button>
+        </div>
+        <div class="controls">
+            <select id="difficulty">
+                <option value="3">Easy (3 discs)</option>
+                <option value="4">Medium (4 discs)</option>
+                <option value="5">Hard (5 discs)</option>
+            </select>
+            <button id="startGame">Start Game</button>
+        </div>
+        <div id="game-container">
+            <div id="tower1" class="tower"></div>
+            <div id="tower2" class="tower"></div>
+            <div id="tower3" class="tower"></div>
+        </div>
+        <div id="moves">Moves: 0</div>
+        <div id="highScore">High Score: 0</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
