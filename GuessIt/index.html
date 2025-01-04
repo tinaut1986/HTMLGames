@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuessIt</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+        <i data-lucide="moon"></i>
+    </button>
+    <div class="game-container">
+        <h1>GuessIt</h1>
+        <div class="theme-selector">
+            <label for="iconTheme">Icon theme:</label>
+            <select id="iconTheme">
+                <option value="lucide">Lucide Icons</option>
+                <option value="emoji">Emojis</option>
+            </select>
+        </div>
+        <div class="difficulty-selector">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="3">Easy (3 icons)</option>
+                <option value="4">Medium (4 icons)</option>
+                <option value="5">Hard (5 icons)</option>
+            </select>
+        </div>
+        <div id="gameBoard" class="game-board"></div>
+        <div id="iconSelector" class="icon-selector"></div>
+        <div class="button-container">
+            <button id="undoButton">Undo</button>
+            <button id="confirmButton">Confirm</button>
+        </div>
+        <div id="message" aria-live="polite"></div>
+        <div id="remainingAttempts"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
