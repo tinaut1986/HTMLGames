@@ -9,17 +9,22 @@ let grid = [];
 let moves = 0;
 let gameOver = false;
 let difficulty = 'medium';
+let language = "es";
 let score = 0;
 let highScore = localStorage.getItem('floodItHighScore') || 0;
 
 const gridElement = document.getElementById('grid');
 const colorButtonsElement = document.getElementById('colorButtons');
 const difficultySelect = document.getElementById('difficulty');
+const languageSelect = document.getElementById('language');
 const restartButton = document.getElementById('restartButton');
 const movesElement = document.getElementById('moves');
 const scoreElement = document.getElementById('score');
 const highScoreElement = document.getElementById('highScore');
 const darkModeToggle = document.getElementById('darkModeToggle');
+const instructionsButton = document.getElementById('instructionsButton');
+const instructionsModal = document.getElementById('instructionsModal');
+const closeModal = document.getElementsByClassName('close')[0];
 
 /// Creates a grid of specified size filled with random colors from the COLORS array.
 function createGrid(size) {
@@ -79,9 +84,9 @@ function renderColorButtons() {
 
 /// Updates the displayed information about moves, score and high score.
 function updateInfo() {
-   movesElement.textContent = `Moves: ${moves} / ${DIFFICULTIES[difficulty].maxMoves}`;
-   scoreElement.textContent = `Score: ${score}`;
-   highScoreElement.textContent = `High Score: ${highScore}`;
+   movesElement.textContent = `${moves} / ${DIFFICULTIES[difficulty].maxMoves}`;
+   scoreElement.textContent = `${score}`;
+   highScoreElement.textContent = `${highScore}`;
 }
 
 /// Handles the click event on a color button and updates the game state accordingly.
@@ -129,10 +134,10 @@ function checkGameOver() {
 
 /// Initializes a new game based on the selected difficulty level.
 function initGame() {
-    const { size } = DIFFICULTIES[difficulty];
-   
-    difficultySelect.value = difficulty;
+    difficulty = difficultySelect.value;
+    language = languageSelect.value;
 
+    const { size } = DIFFICULTIES[difficulty];
     grid = createGrid(size);
    
     gameOver = false;
@@ -142,16 +147,51 @@ function initGame() {
     renderGrid();
     renderColorButtons();
     updateInfo();
+    loadTranslations();
 }
 
 // Event listener for changing difficulty
 difficultySelect.onchange = (e) => {
     difficulty = e.target.value; 
-    initGame(); 
+    initGame();
 };
 
 // Event listener for restarting the game
 restartButton.onclick = initGame;
+
+// Event listener for changing language
+languageSelect.onchange = (e) => {
+    language = e.target.value; 
+    loadTranslations(); 
+};
+
+function loadTranslations() {
+    fetch('translations.json')
+        .then(response => response.json())
+        .then(translations => {
+            // Iterar sobre todos los IDs en el documento
+            for (const id in translations) {
+                if (translations[id][language]) {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        // Si el elemento existe, actualizar su texto
+                        if (Array.isArray(translations[id][language])) {
+                            // Si es una lista, crear una lista en el HTML
+                            const instructionsListElement = document.getElementById('instructionsList');
+                            instructionsListElement.innerHTML = ''; // Limpiar lista anterior
+                            translations[id][language].forEach(instruction => {
+                                const li = document.createElement('li');
+                                li.innerText = instruction;
+                                instructionsListElement.appendChild(li);
+                            });
+                        } else {
+                            element.innerText = translations[id][language];
+                        }
+                    }
+                }
+            }
+        });
+}
 
 /// Toggles dark mode for better user experience at night.
 function toggleDarkMode() {
@@ -184,6 +224,21 @@ document.addEventListener('keydown', (e) => {
 function activateRainbowMode() {
      alert('Rainbow mode activated!');
      document.body.style.animation = 'rainbow 5s linear infinite';
+}
+
+// Modal de instrucciones
+instructionsButton.onclick = function() {
+    instructionsModal.style.display = "block";
+}
+
+closeModal.onclick = function() {
+    instructionsModal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == instructionsModal) {
+        instructionsModal.style.display = "none";
+    }
 }
 
 // Initialize the game on page load

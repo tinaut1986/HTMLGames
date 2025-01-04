@@ -1,0 +1,108 @@
+{
+    "title": {
+        "en": "Flood It",
+        "es": "Flood It",
+        "ca": "Flood It"
+    },
+    "difficultyLabel": {
+        "en": "Difficulty:",
+        "es": "Dificultad:",
+        "ca": "Dificultat:"
+    },
+    "easyOption": {
+        "en": "Easy",
+        "es": "Fácil",
+        "ca": "Fàcil"
+    },
+    "mediumOption": {
+        "en": "Medium",
+        "es": "Medio",
+        "ca": "Mitjà"
+    },
+    "hardOption": {
+        "en": "Hard",
+        "es": "Difícil",
+        "ca": "Difícil"
+    },
+    "movesLabel": {
+        "en": "Moves",
+        "es": "Movimientos",
+        "ca": "Moviments"
+    },
+    "scoreLabel": {
+        "en": "Score",
+        "es": "Puntuación",
+        "ca": "Puntuació"
+    },
+    "highScoreLabel": {
+        "en": "High Score",
+        "es": "Puntuación Más Alta",
+        "ca": "Puntuació Més Alta"
+    },
+    "restartButton": {
+        "en": "Restart",
+        "es": "Reiniciar",
+        "ca": "Reiniciar"
+    },
+    "instructionsButton": {
+        "en": "Instructions",
+        "es": "Instrucciones",
+        "ca": "Instruccions"
+    },
+    "languageLabel": {
+        "en": "Language",
+        "es": "Idioma",
+        "ca": "Idioma"
+    },
+    "spanishOption": {
+        "en": "Spanish",
+        "es": "Español",
+        "ca": "Espanyol"
+    },
+    "englishOption": {
+        "en": "English",
+        "es": "Inglés",
+        "ca": "Anglès"
+    },
+    "instructionsModalTitle": {
+        "en": "Game Instructions",
+        "es": "Instrucciones del Juego",
+        "ca": "Instruccions del Joc"
+    },
+    "instructionsModalContent1": {
+        "en": "Flood It is a logic and strategy game. The goal is to flood the entire grid with a single color in the fewest moves possible.",
+        "es": "Flood It es un juego de lógica y estrategia. El objetivo es inundar toda la cuadrícula con un solo color en el menor número de movimientos posible.",
+        "ca": "Flood It és un joc de lògica i estratègia. L'objectiu és inundar tota la quadrícula amb un sol color en el menor nombre de moviments possible."
+    },
+    "instructionsList": {
+        "en": [
+            "The game starts with a grid of random colors.",
+            "Click one of the color buttons at the bottom to change the color of the top left corner.",
+            "All adjacent cells of the same color will also change.",
+            "Continue selecting colors to expand your area until the entire grid is the same color.",
+            "Try to complete the game in the fewest moves possible.",
+            "You can change the difficulty to face larger grids."
+        ],
+        "es": [
+            "El juego comienza con una cuadrícula de colores aleatorios.",
+            "Haz clic en uno de los botones de color en la parte inferior para cambiar el color de la esquina superior izquierda.",
+            "Todas las celdas adyacentes del mismo color también cambiarán.",
+            "Continúa seleccionando colores para expandir tu área hasta que toda la cuadrícula sea del mismo color.",
+            "Intenta completar el juego en el menor número de movimientos posible.",
+            "Puedes cambiar la dificultad para enfrentarte a cuadrículas más grandes."
+        ],
+        "ca": [
+            "El joc comença amb una quadrícula de colors aleatoris.",
+            "Clica en un dels botons de color a la part inferior per canviar el color de la cantonada superior esquerra.",
+            "Totes les cel·les adjacents del mateix color també canviaran.",
+            "Continua seleccionant colors per expandir la teva àrea fins que tota la quadrícula sigui del mateix color.",
+            "Intenta completar el joc en el menor nombre de moviments possible.",
+            "Pots canviar la dificultat per afrontar quadrícules més grans."
+        ]
+    },
+    "goodLuckMessage": {
+        "en":"Good luck and have fun!",
+        "es":"¡Buena suerte y diviértete!",
+        "ca":"Bona sort i que et diverteixis!"
+    }
+}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- Changed to English -->
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flood It</title>
+    <title id="pageTitle">Flood It</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌈</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,22 +12,22 @@
     <button id="darkModeToggle">🌓</button>
     
     <div class="game-container">
-        <h1>Flood It</h1>
+        <h1 id="title">Flood It</h1>
         
         <!-- Difficulty selection -->
         <div class="info">
-            <label for="difficulty">Difficulty:</label>
+            <label for="difficulty" id="difficultyLabel">Difficulty:</label>
             <select id="difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
+                <option value="easy" id="easyOption">Easy</option>
+                <option value="medium" id="mediumOption" selected>Medium</option>
+                <option value="hard" id="hardOption">Hard</option>
             </select>
         </div>
         
         <!-- Display for moves, score, and high score -->
-        <div id="moves" class="info"></div> <!-- Moves -->
-        <div id="score" class="info"></div> <!-- Score -->
-        <div id="highScore" class="info"></div> <!-- High Score -->
+        <div class="info"><span id="movesLabel"></span>: <span id="moves"></span></div><!-- Moves -->
+        <div class="info"><span id="scoreLabel"></span>: <span id="score"></span></div> <!-- Score -->
+        <div class="info"><span id="highScoreLabel"></span>: <span id="highScore"></span></div> <!-- High Score -->
         
         <!-- Game grid and color buttons -->
         <div id="grid" class="grid"></div>
@@ -35,8 +35,32 @@
         
         <!-- Button to restart the game -->
         <button id="restartButton">Restart</button>
+        <button id="instructionsButton">Instructions</button>
+        <label for="language" id="languageLabel">Language:</label>
+            <select id="language">
+                <option value="en" id="englishOption">English</option>
+                <option value="es" id="spanishOption" selected>Spanish</option>
+                <option value="ca" id="catalanOption">Catalan</option>
+            </select>
     </div>
-    
+
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="instructionsModalTitle">Game Instructions</h2>
+            <p id="instructionsModalContent1">Flood It is a logic and strategy game. The goal is to flood the entire grid with a single color in the fewest moves possible.</p>
+            <ol id="instructionsList">
+                <li>The game starts with a grid of random colors.</li>
+                <li>Click one of the color buttons at the bottom to change the color of the top left corner.</li>
+                <li>All adjacent cells of the same color will also change.</li>
+                <li>Continue selecting colors to expand your area until the entire grid is the same color.</li>
+                <li>Try to complete the game in the fewest moves possible.</li>
+                <li>You can change the difficulty to face larger grids.</li>
+            </ol>
+            <p id="goodLuckMessage">Good luck and have fun!</p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
