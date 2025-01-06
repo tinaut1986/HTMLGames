@@ -13,9 +13,9 @@ let gameState = {
 let currentTheme = 'lucide';
 let secretCombination = [];
 let gameBoards = {
-    3: [],
-    4: [],
-    5: []
+    3: { board: [], completed: false, message: '', correctCombination: [] },
+    4: { board: [], completed: false, message: '', correctCombination: [] },
+    5: { board: [], completed: false, message: '', correctCombination: [] }
 };
 let usedIcons = {
     3: {},
@@ -23,7 +23,7 @@ let usedIcons = {
     5: {}
 };
 let difficulty = 3;
-const maxAttempts = 8;
+const maxAttempts = 5;
 const gameBoardElement = document.getElementById('gameBoard');
 const iconSelectorElement = document.getElementById('iconSelector');
 const undoButton = document.getElementById('undoButton');
@@ -47,11 +47,12 @@ function seededRandom(seed) {
 function generateSecretCombination() {
     const seed = getDateSeed();
     secretCombination = [];
-    const availableIcons = difficulty * 2;
+    const availableIcons = difficulty * 3;
     for (let i = 0; i < difficulty; i++) {
         const randomIndex = Math.floor(seededRandom(seed + i) * availableIcons);
         secretCombination.push(randomIndex);
     }
+    gameBoards[difficulty].correctCombination = [...secretCombination];
 }
 
 function initializeGame() {
@@ -71,12 +72,16 @@ function initializeGame() {
     };
 
     if (lastPlayedDate !== currentDate) {
-        generateSecretCombination();
-        gameBoards = {
-            3: Array(maxAttempts).fill().map(() => Array(3).fill(null)),
-            4: Array(maxAttempts).fill().map(() => Array(4).fill(null)),
-            5: Array(maxAttempts).fill().map(() => Array(5).fill(null))
-        };
+        for (let diff of [3, 4, 5]) {
+            difficulty = diff;
+            generateSecretCombination();
+            gameBoards[diff] = {
+                board: Array(maxAttempts).fill().map(() => Array(diff).fill(null)),
+                completed: false,
+                message: '',
+                correctCombination: [...secretCombination]
+            };
+        }
         localStorage.setItem('lastPlayedDate', currentDate);
     }
     updateUI();
@@ -95,8 +100,8 @@ function updateUI() {
     // Iterar sobre los intentos
     for (let i = 0; i < maxAttempts; i++) {
         // Inicializar fila si no existe
-        if (!currentBoard[i]) {
-            currentBoard[i] = Array(difficulty).fill(null);
+        if (!currentBoard.board[i]) {
+            currentBoard.board[i] = Array(difficulty).fill(null);
         }
         // Iterar sobre las columnas
         for (let j = 0; j < difficulty; j++) {
@@ -107,10 +112,10 @@ function updateUI() {
                 slot.classList.add('active');
             }
             // Renderizar icono si existe
-            if (currentBoard[i][j] !== null) {
-                slot.innerHTML = renderIcon(currentBoard[i][j].icon);
-                if (currentBoard[i][j].result) {
-                    slot.classList.add(currentBoard[i][j].result);
+            if (currentBoard.board[i][j] !== null) {
+                slot.innerHTML = renderIcon(currentBoard.board[i][j].icon);
+                if (currentBoard.board[i][j].result) {
+                    slot.classList.add(currentBoard.board[i][j].result);
                 }
             }
             gameBoardElement.appendChild(slot);
@@ -118,8 +123,8 @@ function updateUI() {
     }
 
     // Configurar el selector de iconos
-    const availableIcons = difficulty * 2;
-    iconSelectorElement.style.gridTemplateColumns = `repeat(${Math.ceil(availableIcons / 2)}, 1fr)`;
+    const availableIcons = difficulty * 3;
+    iconSelectorElement.style.gridTemplateColumns = `repeat(${Math.ceil(availableIcons / 3)}, 1fr)`;
 
     const icons = iconThemes[currentTheme].slice(0, availableIcons);
     icons.forEach((icon, index) => {
@@ -148,8 +153,13 @@ function updateUI() {
     // Actualizar información de intentos restantes y estado de botones
     remainingAttemptsElement.textContent = `Intentos restantes: ${maxAttempts - gameState[difficulty].currentAttempt}`;
 
-    undoButton.disabled = gameState[difficulty].currentPosition === 0;
-    confirmButton.disabled = gameState[difficulty].currentPosition !== difficulty;
+    undoButton.disabled = gameState[difficulty].currentPosition === 0 || currentBoard.completed;
+    confirmButton.disabled = gameState[difficulty].currentPosition !== difficulty || currentBoard.completed;
+
+    messageElement.innerHTML = currentBoard.message;
+    if (currentBoard.completed && currentBoard.message.includes('Se acabaron los intentos')) {
+        messageElement.innerHTML += ` La combinación correcta era: ${currentBoard.correctCombination.map(index => renderIcon(index)).join(' ')}`;
+    }
 }
 
 function renderIcon(iconIndex) {
@@ -158,8 +168,8 @@ function renderIcon(iconIndex) {
 }
 
 function selectIcon(iconIndex) {
-    if (gameState[difficulty].currentPosition < difficulty) {
-        gameBoards[difficulty][gameState[difficulty].currentAttempt][gameState[difficulty].currentPosition] = { icon: iconIndex, result: null };
+    if (gameState[difficulty].currentPosition < difficulty && !gameBoards[difficulty].completed) {
+        gameBoards[difficulty].board[gameState[difficulty].currentAttempt][gameState[difficulty].currentPosition] = { icon: iconIndex, result: null };
         gameState[difficulty].currentPosition++;
         updateUI();
         saveGameState();
@@ -167,24 +177,25 @@ function selectIcon(iconIndex) {
 }
 
 function undoLastSelection() {
-    if (gameState[difficulty].currentPosition > 0) {
+    if (gameState[difficulty].currentPosition > 0 && !gameBoards[difficulty].completed) {
         gameState[difficulty].currentPosition--;
-        gameBoards[difficulty][gameState[difficulty].currentAttempt][gameState[difficulty].currentPosition] = null;
+        gameBoards[difficulty].board[gameState[difficulty].currentAttempt][gameState[difficulty].currentPosition] = null;
         updateUI();
         saveGameState();
     }
 }
 
-function checkCombination() {
+function checkCombination(onlyUpdate = false) {
     let correctPositions = 0;
-    const currentCombination = gameBoards[difficulty][gameState[difficulty].currentAttempt].map(slot => slot.icon);
-    const secretCopy = [...secretCombination];
+    const currentBoard = gameBoards[difficulty];
+    const currentCombination = currentBoard.board[gameState[difficulty].currentAttempt].map(slot => slot.icon);
+    const secretCopy = [...currentBoard.correctCombination];
     const currentCopy = [...currentCombination];
 
     // Primero, verifica las posiciones correctas
     for (let i = 0; i < difficulty; i++) {
         if (currentCopy[i] === secretCopy[i]) {
-            gameBoards[difficulty][gameState[difficulty].currentAttempt][i].result = 'correct-position';
+            currentBoard.board[gameState[difficulty].currentAttempt][i].result = 'correct-position';
             correctPositions++;
             currentCopy[i] = secretCopy[i] = null;
         }
@@ -195,36 +206,40 @@ function checkCombination() {
         if (currentCopy[i] !== null) {
             const secretIndex = secretCopy.indexOf(currentCopy[i]);
             if (secretIndex !== -1) {
-                gameBoards[difficulty][gameState[difficulty].currentAttempt][i].result = 'correct-icon';
+                currentBoard.board[gameState[difficulty].currentAttempt][i].result = 'correct-icon';
                 secretCopy[secretIndex] = null;
             } else {
-                gameBoards[difficulty][gameState[difficulty].currentAttempt][i].result = null;
+                currentBoard.board[gameState[difficulty].currentAttempt][i].result = null;
             }
         }
     }
 
+    if (!onlyUpdate) {
+        gameState[difficulty].currentAttempt++;
+    }
     updateUsedIcons(currentCombination);
 
     if (correctPositions === difficulty) {
-        messageElement.textContent = '¡Felicidades! Has descubierto la combinación correcta.';
-        confirmButton.disabled = true;
-    } else if (gameState[difficulty].currentAttempt >= maxAttempts - 1) {
-        messageElement.textContent = `Se acabaron los intentos. La combinación correcta era: ${secretCombination.map(index => renderIcon(index)).join(' ')}`;
-        confirmButton.disabled = true;
+        currentBoard.completed = true;
+        currentBoard.message = '¡Felicidades! Has descubierto la combinación correcta.';
+    } else if (gameState[difficulty].currentAttempt >= maxAttempts) {
+        currentBoard.completed = true;
+        currentBoard.message = 'Se acabaron los intentos.';
     } else {
-        messageElement.textContent = '';
-        gameState[difficulty].currentAttempt++;
+        currentBoard.message = '';
         gameState[difficulty].currentPosition = 0;
     }
 
     updateUI();
-    saveGameState();
+    if (!onlyUpdate) {
+        saveGameState();
+    }
 }
 
 function updateUsedIcons(currentCombination) {
     // Inicializar el conteo de iconos en la combinación secreta
     const iconCounts = {};
-    secretCombination.forEach((icon, index) => {
+    gameBoards[difficulty].correctCombination.forEach((icon, index) => {
         iconCounts[icon] = (iconCounts[icon] || 0) + 1;
     });
 
@@ -235,7 +250,7 @@ function updateUsedIcons(currentCombination) {
 
     // Procesar cada icono en la combinación actual
     currentCombination.forEach((icon, index) => {
-        if (secretCombination[index] === icon) {
+        if (gameBoards[difficulty].correctCombination[index] === icon) {
             // El icono está en la posición correcta
             usedIcons[difficulty][icon] = 'all';
             iconCounts[icon]--;
@@ -248,7 +263,6 @@ function updateUsedIcons(currentCombination) {
         }
     });
 }
-
 
 function saveGameState() {
     const gameStateToSave = {
@@ -272,62 +286,30 @@ function loadGameState() {
         currentTheme = parsedState.theme;
         difficulty = parsedState.difficulty;
 
-        loadGameStateForDifficulty(difficulty);
+        gameBoards = parsedState.boards;
+        gameState = parsedState.gameState;
+        usedIcons = parsedState.usedIcons;
 
         iconThemeSelect.value = currentTheme;
         difficultySelect.value = difficulty.toString();
 
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const darkModeIcon = darkModeToggle ? darkModeToggle.querySelector('svg') : null;
-
         if (parsedState.darkMode) {
             document.body.classList.add('dark-mode');
-            if (darkModeIcon) {
-                darkModeIcon.setAttribute('data-lucide', 'sun');
-            }
+            darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'sun');
         } else {
             document.body.classList.remove('dark-mode');
-            if (darkModeIcon) {
-                darkModeIcon.setAttribute('data-lucide', 'moon');
-            }
+            darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'moon');
         }
     } else {
         initializeGame();
     }
 
-    generateSecretCombination();
     updateUI();
     lucide.createIcons();
 }
 
-function loadGameStateForDifficulty(newDifficulty) {
-    const savedState = localStorage.getItem('gameState');
-    if (savedState) {
-        const parsedState = JSON.parse(savedState);
-        if (parsedState.boards && parsedState.boards[newDifficulty]) {
-            gameBoards[newDifficulty] = parsedState.boards[newDifficulty];
-        } else {
-            gameBoards[newDifficulty] = Array(maxAttempts).fill().map(() => Array(newDifficulty).fill(null));
-        }
-        if (parsedState.gameState && parsedState.gameState[newDifficulty]) {
-            gameState[newDifficulty] = parsedState.gameState[newDifficulty];
-        } else {
-            gameState[newDifficulty] = { currentAttempt: 0, currentPosition: 0 };
-        }
-        if (parsedState.usedIcons && parsedState.usedIcons[newDifficulty]) {
-            usedIcons[newDifficulty] = parsedState.usedIcons[newDifficulty];
-        } else {
-            usedIcons[newDifficulty] = {};
-        }
-    } else {
-        gameBoards[newDifficulty] = Array(maxAttempts).fill().map(() => Array(newDifficulty).fill(null));
-        gameState[newDifficulty] = { currentAttempt: 0, currentPosition: 0 };
-        usedIcons[newDifficulty] = {};
-    }
-}
-
 undoButton.addEventListener('click', undoLastSelection);
-confirmButton.addEventListener('click', checkCombination);
+confirmButton.addEventListener('click', () => checkCombination(false));
 darkModeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     const icon = darkModeToggle.querySelector('svg');
@@ -347,12 +329,15 @@ iconThemeSelect.addEventListener('change', (e) => {
     updateUI();
     saveGameState();
 });
+
 difficultySelect.addEventListener('change', (e) => {
     const newDifficulty = parseInt(e.target.value);
+
     if (newDifficulty !== difficulty) {
         difficulty = newDifficulty;
-        loadGameStateForDifficulty(newDifficulty);
-        generateSecretCombination();
+        if (!gameBoards[difficulty].correctCombination.length) {
+            generateSecretCombination();
+        }
         updateUI();
         saveGameState();
     }
