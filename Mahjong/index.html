@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong Solitaire Moderno</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header-container">
+        <h1>Mahjong Solitaire</h1>
+        <button id="toggle-theme" aria-label="Cambiar tema">
+            <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M12 9c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 4c-.552 0-1-.448-1-1s.448-1 1-1 1 .448 1 1-.448 1-1 1zM12 5c.552 0 1-.448 1-1V2c0-.552-.448-1-1-1s-1 .448-1 1v2c0 .552.448 1 1 1zM12 21c.552 0 1-.448 1-1v-2c0-.552-.448-1-1-1s-1 .448-1 1v2c0 .552.448 1 1 1zM19.071 6.343c.391-.391.391-1.024 0-1.414s-1.024-.391-1.414 0l-1.414 1.414c-.391.391-.391 1.024 0 1.414.195.195.451.293.707.293s.512-.098.707-.293l1.414-1.414zM6.343 19.071c.391-.391.391-1.024 0-1.414l-1.414-1.414c-.391-.391-1.024-.391-1.414 0s-.391 1.024 0 1.414l1.414 1.414c.195.195.451.293.707.293s.512-.098.707-.293zM22 13h-2c-.552 0-1-.448-1-1s.448-1 1-1h2c.552 0 1 .448 1 1s-.448 1-1 1zM4 13H2c-.552 0-1-.448-1-1s.448-1 1-1h2c.552 0 1 .448 1 1s-.448 1-1 1zM17.657 19.071l1.414-1.414c.391-.391.391-1.024 0-1.414s-1.024-.391-1.414 0l-1.414 1.414c-.391.391-.391 1.024 0 1.414.195.195.451.293.707.293s.512-.098.707-.293zM4.929 6.343l1.414-1.414c.391-.391.391-1.024 0-1.414s-1.024-.391-1.414 0L3.515 4.929c-.391.391-.391 1.024 0 1.414.195.195.451.293.707.293s.512-.098.707-.293z"/></svg>
+            <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M12 1.998c-5.523 0-10 4.477-10 10 0 4.99 3.656 9.126 8.438 9.878.624.116.856-.27.856-.599 0-.295-.01-1.078-.017-2.117-3.55.77-4.3-1.715-4.3-1.715-.569-1.446-1.391-1.831-1.391-1.831-1.135-.775.086-.759.086-.759 1.255.088 1.916 1.288 1.916 1.288 1.115 1.91 2.925 1.358 3.638 1.039.113-.808.436-1.358.798-1.67-2.776-.315-5.694-1.388-5.694-6.179 0-1.365.489-2.482 1.289-3.358-.129-.315-.557-1.59.122-3.31 0 0 1.048-.335 3.438 1.281 1-.277 2.07-.416 3.13-.42 1.06.004 2.13.143 3.13.42 2.39-1.616 3.438-1.281 3.438-1.281.679 1.72.251 2.995.122 3.31.801.876 1.289 1.993 1.289 3.358 0 4.803-2.922 5.86-5.706 6.167.449.386.85 1.147.85 2.311 0 1.669-.015 3.014-.015 3.422 0 .33.228.72.864.598C18.346 21.124 22 16.988 22 11.998c0-5.523-4.477-10-10-10z"/></svg>
+        </button>
+    </div>
+
+    <div class="controls">
+        <div class="icon-selector">
+            <label for="icon-set-selector">Iconos:</label>
+            <select id="icon-set-selector">
+                <option value="kanji" selected>Kanji</option>
+                <option value="symbols">Símbolos</option>
+                <option value="emoji">Emojis</option>
+            </select>
+        </div>
+        <button id="reset-game">Nuevo Juego</button>
+         <div id="game-info">
+            Pares: <span id="pairs-left">--</span> | Pts: <span id="score">0</span>
+        </div>
+    </div>
+
+    <div id="game-board-container">
+        <div id="game-board">
+            <!-- Las fichas se generarán aquí con JavaScript -->
+        </div>
+    </div>
+
+    <div id="message" class="message hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

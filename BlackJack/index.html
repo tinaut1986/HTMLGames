@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Jack</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Black Jack</h1>
+        <div id="game-area">
+            <div id="dealer-hand">
+                <h2>Casa</h2>
+                <div class="cards"></div>
+                <p>Puntuación: <span id="dealer-score"></span></p>
+            </div>
+            <div id="player-hands"></div>
+            <div id="message"></div>
+            <div id="money">Dinero: $<span id="player-money"></span></div>
+            <div id="bet">Apuesta actual: $<span id="current-bet"></span></div>
+            <div id="controls">
+                <input type="number" id="bet-amount" min="1" step="1">
+                <button id="bet-button">Apostar</button>
+                <button id="hit-button">Pedir</button>
+                <button id="stand-button">Plantarse</button>
+                <button id="double-button">Doblar</button>
+                <button id="split-button">Dividir</button>
+                <button id="new-game-button">Nueva partida</button>
+                <button id="instructions-button">Instrucciones</button>
+            </div>
+        </div>
+    </div>
+    <div id="instructions" class="modal">
+        <div class="modal-content">
+            <h2>Instrucciones del Black Jack</h2>
+            <ul>
+                <li>El objetivo es conseguir 21 puntos o acercarse lo máximo posible sin pasarse.</li>
+                <li>Las cartas numéricas valen su número, las figuras (J, Q, K) valen 10 y el As vale 1 u 11.</li>
+                <li>Puedes "pedir" para recibir más cartas o "plantarte" para mantener tu mano actual.</li>
+                <li>"Doblar" duplica tu apuesta y te da una carta más antes de plantarte.</li>
+                <li>"Dividir" separa un par en dos manos, duplicando tu apuesta.</li>
+                <li>El crupier debe pedir carta hasta tener 17 o más.</li>
+                <li>Blackjack (21 con dos cartas) paga 3:2.</li>
+            </ul>
+            <button id="close-instructions">Cerrar</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

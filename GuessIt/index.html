@@ -1,38 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GuessIt</title>
+    <title>Juego de Descubrir la Combinación</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="darkModeToggle" aria-label="Toggle dark mode">
+    <button id="darkModeToggle" aria-label="Cambiar modo oscuro">
         <i data-lucide="moon"></i>
     </button>
     <div class="game-container">
-        <h1>GuessIt</h1>
+        <h1>Descubre la Combinación</h1>
+        <div id="calendar" class="calendar"></div>
         <div class="theme-selector">
-            <label for="iconTheme">Icon theme:</label>
+            <label for="iconTheme">Tema de iconos:</label>
             <select id="iconTheme">
                 <option value="lucide">Lucide Icons</option>
                 <option value="emoji">Emojis</option>
             </select>
         </div>
         <div class="difficulty-selector">
-            <label for="difficulty">Difficulty:</label>
+            <label for="difficulty">Dificultad:</label>
             <select id="difficulty">
-                <option value="3">Easy (3 icons)</option>
-                <option value="4">Medium (4 icons)</option>
-                <option value="5">Hard (5 icons)</option>
+                <option value="3">Fácil (3 iconos)</option>
+                <option value="4">Medio (4 iconos)</option>
+                <option value="5">Difícil (5 iconos)</option>
             </select>
         </div>
         <div id="gameBoard" class="game-board"></div>
         <div id="iconSelector" class="icon-selector"></div>
         <div class="button-container">
-            <button id="undoButton">Undo</button>
-            <button id="confirmButton">Confirm</button>
+            <button id="undoButton">Deshacer</button>
+            <button id="confirmButton">Confirmar</button>
         </div>
         <div id="message" aria-live="polite"></div>
         <div id="remainingAttempts"></div>
@@ -40,3 +41,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+

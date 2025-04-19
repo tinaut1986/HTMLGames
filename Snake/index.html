@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Snake Game</h1>
+        <div class="controls">
+            <label for="difficulty">Dificultad:</label>
+            <select id="difficulty">
+                <option value="easy">Fácil</option>
+                <option value="medium" selected>Medio</option>
+                <option value="hard">Difícil</option>
+                <option value="insane">Imposible</option>
+            </select>
+        </div>
+        <div class="scores">
+            <span>Puntuación: <span id="current-score">0</span></span>
+            <span>Máx (<span id="difficulty-label">Medio</span>): <span id="high-score">0</span></span>
+        </div>
+        <canvas id="gameCanvas" width="300" height="300"></canvas>
+        <div id="gameOver" class="game-over-message" style="display: none;">
+             ¡Has perdido! Toca/Pulsa Enter para reiniciar.
+        </div>
+         <div class="mobile-controls">
+             <button id="btnUp">▲</button>
+             <div>
+                 <button id="btnLeft">◀</button>
+                 <button id="btnRight">▶</button>
+             </div>
+             <button id="btnDown">▼</button>
+         </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

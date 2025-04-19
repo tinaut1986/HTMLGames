@@ -44,6 +44,21 @@ function seededRandom(seed) {
     return x - Math.floor(x);
 }
 
+let currentDate = new Date().toISOString().split('T')[0];
+let selectedDate = currentDate;
+
+// Función para generar una combinación secreta basada en una fecha
+function generateSecretCombinationForDate(date, diff) {
+    const seed = new Date(date).getTime();
+    const secretComb = [];
+    const availableIcons = diff * 3;
+    for (let i = 0; i < diff; i++) {
+        const randomIndex = Math.floor(seededRandom(seed + i) * availableIcons);
+        secretComb.push(randomIndex);
+    }
+    return secretComb;
+}
+
 function generateSecretCombination() {
     const seed = getDateSeed();
     secretCombination = [];
@@ -55,37 +70,28 @@ function generateSecretCombination() {
     gameBoards[difficulty].correctCombination = [...secretCombination];
 }
 
-function initializeGame() {
-    const currentDate = new Date().toDateString();
-    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
-
-    gameState = {
-        3: { currentAttempt: 0, currentPosition: 0 },
-        4: { currentAttempt: 0, currentPosition: 0 },
-        5: { currentAttempt: 0, currentPosition: 0 }
-    };
-
-    usedIcons = {
-        3: {},
-        4: {},
-        5: {}
-    };
-
-    if (lastPlayedDate !== currentDate) {
-        for (let diff of [3, 4, 5]) {
-            difficulty = diff;
-            generateSecretCombination();
-            gameBoards[diff] = {
-                board: Array(maxAttempts).fill().map(() => Array(diff).fill(null)),
-                completed: false,
-                message: '',
-                correctCombination: [...secretCombination]
-            };
-        }
-        localStorage.setItem('lastPlayedDate', currentDate);
+function initializeGame(selectToday) {
+    if(selectToday) {
+        currentDate = new Date().toISOString().split('T')[0];
+        selectedDate = currentDate;
     }
-    updateUI();
-    saveGameState();
+
+    const gameStateKey = `gameState_${selectedDate}`;
+    const savedState = localStorage.getItem(gameStateKey);
+    
+    if (savedState) {
+        loadGameState(JSON.parse(savedState));
+    } else {
+        gameBoards[difficulty] = {
+            board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
+            completed: false,
+            message: '',
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+        };
+        gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
+        usedIcons[difficulty] = {};
+        saveGameState();
+    }
 }
 
 function updateUI() {
@@ -265,47 +271,154 @@ function updateUsedIcons(currentCombination) {
 }
 
 function saveGameState() {
-    const gameStateToSave = {
-        theme: currentTheme,
-        difficulty: difficulty,
-        boards: gameBoards,
-        gameState: gameState,
-        usedIcons: usedIcons,
-        darkMode: document.body.classList.contains('dark-mode'),
-        lastPlayedDate: new Date().toDateString()
+    const gameStateKey = `gameState_${selectedDate}`;
+    let existingState = JSON.parse(localStorage.getItem(gameStateKey) || '{}');
+    
+    existingState[difficulty] = {
+        board: gameBoards[difficulty],
+        gameState: gameState[difficulty],
+        usedIcons: usedIcons[difficulty]
     };
-    localStorage.setItem('gameState', JSON.stringify(gameStateToSave));
+
+    existingState.theme = currentTheme;
+    existingState.darkMode = document.body.classList.contains('dark-mode');
+    
+    localStorage.setItem(gameStateKey, JSON.stringify(existingState));
 }
 
-function loadGameState() {
-    const savedState = localStorage.getItem('gameState');
+function loadGameState(savedState = null) {
+    const gameStateKey = `gameState_${selectedDate}`;
+    if (!savedState) {
+        savedState = JSON.parse(localStorage.getItem(gameStateKey) || '{}');
+    }
 
-    if (savedState) {
-        const parsedState = JSON.parse(savedState);
-
-        currentTheme = parsedState.theme;
-        difficulty = parsedState.difficulty;
-
-        gameBoards = parsedState.boards;
-        gameState = parsedState.gameState;
-        usedIcons = parsedState.usedIcons;
-
-        iconThemeSelect.value = currentTheme;
-        difficultySelect.value = difficulty.toString();
-
-        if (parsedState.darkMode) {
-            document.body.classList.add('dark-mode');
-            darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'sun');
-        } else {
-            document.body.classList.remove('dark-mode');
-            darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'moon');
-        }
+    if (savedState[difficulty]) {
+        gameBoards[difficulty] = savedState[difficulty].board;
+        gameState[difficulty] = savedState[difficulty].gameState;
+        usedIcons[difficulty] = savedState[difficulty].usedIcons;
     } else {
-        initializeGame();
+        // Inicializar nuevo juego para esta dificultad
+        gameBoards[difficulty] = {
+            board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
+            completed: false,
+            message: '',
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+        };
+        gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
+        usedIcons[difficulty] = {};
+    }
+
+    currentTheme = savedState.theme || 'lucide';
+    iconThemeSelect.value = currentTheme;
+    difficultySelect.value = difficulty.toString();
+
+    if (savedState.darkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'sun');
+    } else {
+        document.body.classList.remove('dark-mode');
+        darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'moon');
     }
 
     updateUI();
+    updateCalendar();
     lucide.createIcons();
+}
+
+// Función para actualizar el calendario
+function updateCalendar() {
+    const calendarElement = document.getElementById('calendar');
+    calendarElement.innerHTML = '';
+
+    const currentMonth = new Date(selectedDate).getMonth();
+    const currentYear = new Date(selectedDate).getFullYear();
+
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+
+    // Crear encabezado del calendario
+    const header = document.createElement('div');
+    header.className = 'calendar-header';
+    header.innerHTML = `
+        <button id="prevMonth">&lt;</button>
+        <span>${firstDay.toLocaleString('default', { month: 'long' })} ${currentYear}</span>
+        <button id="nextMonth">&gt;</button>
+    `;
+    calendarElement.appendChild(header);
+
+    // Crear días de la semana
+    const weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const weekdaysElement = document.createElement('div');
+    weekdaysElement.className = 'calendar-weekdays';
+    weekdays.forEach(day => {
+        const dayElement = document.createElement('div');
+        dayElement.textContent = day;
+        weekdaysElement.appendChild(dayElement);
+    });
+    calendarElement.appendChild(weekdaysElement);
+
+    // Crear días del mes
+    const daysElement = document.createElement('div');
+    daysElement.className = 'calendar-days';
+    
+    // Añadir días vacíos al principio
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        const emptyDay = document.createElement('div');
+        daysElement.appendChild(emptyDay);
+    }
+
+    // Añadir días del mes
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+        const dayElement = document.createElement('div');
+        dayElement.textContent = i;
+        const dateString = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+        
+        if (dateString === selectedDate) {
+            dayElement.classList.add('selected-day');
+        }
+
+        if (dateString === currentDate) {
+            dayElement.classList.add('current-day');
+        }
+
+        if (new Date(dateString) <= new Date(currentDate)) {
+            dayElement.classList.add('clickable');
+            dayElement.addEventListener('click', () => selectDate(dateString));
+
+            // Verificar el estado del juego para este día y dificultad
+            const savedState = JSON.parse(localStorage.getItem(`gameState_${dateString}`) || '{}');
+            if (savedState[difficulty] && savedState[difficulty].board.completed) {
+                dayElement.classList.add('completed');
+            }
+        } else {
+            dayElement.classList.add('future-day');
+        }
+
+        daysElement.appendChild(dayElement);
+    }
+
+    calendarElement.appendChild(daysElement);
+
+    // Event listeners para los botones de navegación
+    document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
+    document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
+}
+
+function changeMonth(delta) {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() + delta);
+    selectedDate = newDate.toISOString().split('T')[0];
+    updateCalendar();
+}
+
+function selectDate(date) {
+    if (new Date(date) > new Date(currentDate)) {
+        alert('No puedes jugar fechas futuras');
+        return;
+    }
+    selectedDate = date;
+    loadGameState();
+    updateCalendar();
 }
 
 undoButton.addEventListener('click', undoLastSelection);
@@ -335,12 +448,12 @@ difficultySelect.addEventListener('change', (e) => {
 
     if (newDifficulty !== difficulty) {
         difficulty = newDifficulty;
-        if (!gameBoards[difficulty].correctCombination.length) {
-            generateSecretCombination();
-        }
-        updateUI();
-        saveGameState();
+        loadGameState();  // Cargar el estado para la nueva dificultad
+        updateCalendar(); // Actualizar el calendario para reflejar la nueva dificultad
     }
 });
 
-window.addEventListener('load', loadGameState);
+window.addEventListener('load', () => {
+    initializeGame(true);
+    updateCalendar();
+});
