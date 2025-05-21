@@ -5,14 +5,14 @@ class Game2048 {
         this.bestScore = this.getCookie('bestScore') || 0;
         this.isGameOver = false;
         this.difficulty = this.getCookie('difficulty') || 'medium';
-        this.nightMode = this.getCookie('nightMode') === 'true';
+        // Removed: this.nightMode = this.getCookie('nightMode') === 'true';
 
         this.tileContainer = document.querySelector('.tile-container');
         this.scoreDisplay = document.getElementById('score');
         this.bestScoreDisplay = document.getElementById('best-score');
         this.messageContainer = document.querySelector('.game-message');
         this.difficultySelect = document.getElementById('difficulty');
-        this.nightModeToggle = document.getElementById('night-mode-toggle');
+        // Removed: this.nightModeToggle = document.getElementById('night-mode-toggle');
 
         this.setupEventListeners();
         this.initializeGame();
@@ -22,7 +22,7 @@ class Game2048 {
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         document.getElementById('new-game-button').addEventListener('click', () => this.newGame());
         this.difficultySelect.addEventListener('change', (e) => this.changeDifficulty(e.target.value));
-        this.nightModeToggle.addEventListener('click', () => this.toggleNightMode());
+        // Removed: this.nightModeToggle.addEventListener('click', () => this.toggleNightMode());
         document.querySelector('.keep-playing-button').addEventListener('click', () => this.keepPlaying());
         document.querySelector('.retry-button').addEventListener('click', () => this.newGame());
 
@@ -62,7 +62,7 @@ class Game2048 {
         this.updateGrid();
         this.updateScore();
         this.difficultySelect.value = this.difficulty;
-        this.applyNightMode();
+        // Removed: this.applyNightMode();
     }
 
     newGame() {
@@ -311,15 +311,8 @@ class Game2048 {
         this.newGame();
     }
 
-    toggleNightMode() {
-        this.nightMode = !this.nightMode;
-        this.setCookie('nightMode', this.nightMode, 365);
-        this.applyNightMode();
-    }
-
-    applyNightMode() {
-        document.body.classList.toggle('night-mode', this.nightMode);
-    }
+    // Removed toggleNightMode() method
+    // Removed applyNightMode() method
 
     keepPlaying() {
         if (this.isGameOver) {

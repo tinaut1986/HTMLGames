@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego de Descubrir la Combinación</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script> <!-- Keep Lucide for game icons -->
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="styles.css">   <!-- Game-specific styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for toggle -->
 </head>
 <body>
-    <button id="darkModeToggle" aria-label="Cambiar modo oscuro">
-        <i data-lucide="moon"></i>
-    </button>
     <div class="game-container">
         <h1>Descubre la Combinación</h1>
+        <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         <div id="calendar" class="calendar"></div>
         <div class="theme-selector">
             <label for="iconTheme">Tema de iconos:</label>
@@ -38,7 +38,8 @@
         <div id="message" aria-live="polite"></div>
         <div id="remainingAttempts"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="script.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>
 

@@ -1,12 +1,8 @@
 body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-    transition: background-color 0.3s ease;
+    /* font-family, margin, padding, base transition from shared.css */
+    /* display, justify-content, align-items, height removed for component-based centering */
+    background-color: #f0f0f0; /* Hanoi's specific light mode page background */
+    /* transition is in shared.css body */
 }
 
 .container {
@@ -54,74 +50,46 @@ body {
     transition: background-color 0.3s ease;
 }
 
-button, select {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    height: 44px; /* Altura fija para ambos elementos */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+/* Generic button and select styles are inherited from shared.css */
+/* The custom arrow for select is removed for standardization. */
+/* Removed old #darkModeToggle styles and related .lucide styles */
+/* Removed all old body.dark-mode prefixed rules */
+
+#moves, #highScore {
+    margin-top: 10px;
+    font-size: 1.1em;
 }
 
-select {
-    appearance: none; /* Elimina el estilo por defecto del select */
-    padding-right: 30px; /* Espacio para el icono de flecha */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
+/* Night Mode Styles for HanoiTowers */
+
+body.night-mode {
+    /* background-color is from shared.css body.night-mode */
+    /* color is from shared.css body.night-mode */
 }
 
-button:hover, select:hover {
-    background-color: #45a049;
+body.night-mode .container {
+    background-color: #424242; /* Darker background for container */
+    color: #e0e0e0; /* Ensure text inside container is light */
 }
 
-#darkModeToggle {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
+body.night-mode .tower {
+    background-color: #616161; /* Darker tower background */
+    border-bottom-color: #757575; /* Darker tower base */
 }
 
-#darkModeToggle i {
-    color: #333; /* Color oscuro para el icono en modo claro */
+/* Disk colors are set by JS. Adding a border for better visibility in night mode. */
+body.night-mode .disk {
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for disks */
+    /* Text color on disks should remain white or be set by JS for contrast */
 }
 
-body.dark-mode #darkModeToggle i {
-    color: #fff; /* Color claro para el icono en modo oscuro */
+/* Text elements like #moves, #highScore will inherit from body.night-mode .container color */
+/* Buttons and select will inherit night mode styles from shared.css */
+
+.tower.selected {
+    background-color: #bdbdbd !important; /* Highlight for light mode */
 }
 
-/* Dark mode styles */
-body.dark-mode {
-    background-color: #333;
-    color: #fff;
-}
-
-body.dark-mode .container {
-    background-color: #424242;
-}
-
-body.dark-mode .tower {
-    background-color: #616161;
-    border-bottom-color: #757575;
-}
-
-body.dark-mode button,
-body.dark-mode select {
-    background-color: #7CB342;
-}
-
-body.dark-mode button:hover,
-body.dark-mode select:hover {
-    background-color: #689F38;
-}
-
-.lucide.lucide-moon {
-  color: black;
+body.night-mode .tower.selected {
+    background-color: #777 !important; /* Darker highlight for night mode */
 }

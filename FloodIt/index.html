@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Flood It</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌈</text></svg>">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="styles.css">   <!-- Game-specific styles -->
 </head>
 <body>
-    <!-- Button to toggle dark mode -->
-    <button id="darkModeToggle">🌓</button>
     
     <div class="game-container">
         <h1 id="title">Flood It</h1>
+        <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         
         <!-- Difficulty selection -->
         <div class="info">
@@ -61,6 +61,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="script.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>

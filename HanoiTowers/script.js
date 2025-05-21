@@ -8,7 +8,7 @@ const movesDisplay = document.getElementById('moves');
 const highScoreDisplay = document.getElementById('highScore');
 const difficultySelect = document.getElementById('difficulty');
 const startGameButton = document.getElementById('startGame');
-const darkModeToggle = document.getElementById('darkModeToggle');
+// Removed: const darkModeToggle = document.getElementById('darkModeToggle');
 
 function initGame(numDisks) {
     towers = [[], [], []];
@@ -44,13 +44,19 @@ function renderTowers() {
 }
 
 function selectTower(index) {
-    if (selectedTower === null) {
+    // Deselect previous tower visually if any
+    const currentlySelectedElement = document.querySelector('.tower.selected');
+    if (currentlySelectedElement) {
+        currentlySelectedElement.classList.remove('selected');
+    }
+
+    if (selectedTower === null) { // Selecting a tower to pick up a disk
         if (towers[index].length > 0) {
             selectedTower = index;
-            document.getElementById(`tower${index + 1}`).style.backgroundColor = '#bdbdbd';
+            document.getElementById(`tower${index + 1}`).classList.add('selected');
         }
-    } else {
-        if (selectedTower !== index) {
+    } else { // Moving the disk from selectedTower to tower 'index'
+        if (selectedTower !== index) { // Not clicking the same tower
             if (towers[index].length === 0 || towers[selectedTower][towers[selectedTower].length - 1] < towers[index][towers[index].length - 1]) {
                 const disk = towers[selectedTower].pop();
                 towers[index].push(disk);
@@ -64,12 +70,16 @@ function selectTower(index) {
                         localStorage.setItem('highScore', highScore);
                         highScoreDisplay.textContent = `High Score: ${highScore}`;
                     }
+                    // Potentially reset or disable further moves until new game
                 }
+            } else {
+                // Invalid move - clicked tower has smaller disk on top or trying to move to same tower implicitly
+                // Visual feedback for invalid move could be added here if desired
             }
         }
-        document.getElementById(`tower${selectedTower + 1}`).style.backgroundColor = '';
-        selectedTower = null;
-        renderTowers();
+        // Always deselect tower and re-render after an attempt (successful or not, or clicking same tower)
+        selectedTower = null; 
+        renderTowers(); // Re-render to remove 'selected' class from all towers and update disk positions
     }
 }
 
@@ -77,31 +87,12 @@ startGameButton.addEventListener('click', () => {
     initGame(parseInt(difficultySelect.value));
 });
 
-darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    updateDarkModeIcon();
-});
-
-function updateDarkModeIcon() {
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    darkModeToggle.innerHTML = isDarkMode
-        ? '<i data-lucide="sun" aria-hidden="true"></i>'
-        : '<i data-lucide="moon" aria-hidden="true"></i>';
-    lucide.createIcons();
-    darkModeToggle.setAttribute('aria-label', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
-}
-
-// Initialize dark mode based on saved state
-if (localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
-}
+// Removed: darkModeToggle click listener
+// Removed: updateDarkModeIcon function
+// Removed: Initial dark mode loading logic (localStorage.getItem('darkMode'))
 
 // Initialize high score
 highScoreDisplay.textContent = `High Score: ${highScore}`;
-
-// Initialize dark mode icon
-updateDarkModeIcon();
 
 // Add icon to start game button
 startGameButton.innerHTML = '<i data-lucide="play" aria-hidden="true"></i> Start Game';

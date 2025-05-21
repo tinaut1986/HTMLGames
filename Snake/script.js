@@ -15,6 +15,27 @@ const btnRight = document.getElementById('btnRight');
 // --- Game Constants ---
 const GRID_SIZE = 20; // Size of each square in the grid
 const CANVAS_WIDTH = canvas.width;
+
+// --- Color Definitions ---
+const lightModeColors = {
+    background: '#f8f8f8',
+    snakeHead: '#006400',
+    snakeBody: '#008000',
+    food: '#DC143C',
+    // gridStroke: '#eee' // Optional
+};
+
+const darkModeColors = {
+    background: '#2c2c2c', // Dark gray for canvas background
+    snakeHead: '#90EE90', // Light green
+    snakeBody: '#ADFF2F', // Green yellow
+    food: '#FFB6C1',     // Light pink
+    // gridStroke: '#444' // Optional
+};
+
+let currentColors = lightModeColors; // Default to light mode
+
+// --- Game Constants --- (Continued)
 const CANVAS_HEIGHT = canvas.height;
 const GRID_WIDTH = CANVAS_WIDTH / GRID_SIZE;
 const GRID_HEIGHT = CANVAS_HEIGHT / GRID_SIZE;
@@ -131,22 +152,21 @@ function drawRect(x, y, color) {
     ctx.fillStyle = color;
     ctx.fillRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
     // Optional: Add a border to grid cells
-    // ctx.strokeStyle = '#eee';
+    // ctx.strokeStyle = currentColors.gridStroke; // If using grid strokes
     // ctx.strokeRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
 }
 
 // Function to draw the snake
 function drawSnake() {
     snake.forEach((segment, index) => {
-        // Make the head slightly different color
-        const color = index === 0 ? '#006400' : '#008000'; // Darker green for head
+        const color = index === 0 ? currentColors.snakeHead : currentColors.snakeBody;
         drawRect(segment.x, segment.y, color);
     });
 }
 
 // Function to draw the food
 function drawFood() {
-    drawRect(food.x, food.y, '#DC143C'); // Crimson red for food
+    drawRect(food.x, food.y, currentColors.food);
 }
 
 // Function to generate food at a random location not occupied by the snake
@@ -227,8 +247,11 @@ function gameLoop() {
 
     changingDirection = false; // Allow direction change for the next frame
 
+    // Update currentColors based on theme
+    currentColors = document.body.classList.contains('night-mode') ? darkModeColors : lightModeColors;
+
     // 1. Clear canvas
-    ctx.fillStyle = '#f8f8f8'; // Background color
+    ctx.fillStyle = currentColors.background;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     // 2. Move snake
@@ -313,6 +336,41 @@ function isTouchDevice() {
 }
 
 // --- Setup ---
+
+// Function to update colors and redraw based on theme
+function updateThemeColorsAndRedraw() {
+    currentColors = document.body.classList.contains('night-mode') ? darkModeColors : lightModeColors;
+    // Redraw necessary elements if game is active or needs visual update
+    if (!isGameOver) { // Avoid redrawing if game over message is up and static
+        ctx.fillStyle = currentColors.background;
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        drawFood(); // Redraw food with new colors
+        drawSnake(); // Redraw snake with new colors
+    } else {
+        // If game is over, you might want to ensure the game over message itself is styled correctly
+        // or redraw the static board with new colors if it's visible behind the message.
+        // For now, we assume the game over message's styling is handled by CSS.
+        // However, the canvas background behind it should update:
+        ctx.fillStyle = currentColors.background;
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        // If snake and food are still on canvas when game over, redraw them too:
+        if (food) drawFood(); // Check if food exists
+        if (snake && snake.length > 0) drawSnake(); // Check if snake exists
+    }
+}
+
+// Observe body class changes for theme toggling
+const themeObserver = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            updateThemeColorsAndRedraw();
+            break;
+        }
+    }
+});
+themeObserver.observe(document.body, { attributes: true });
+
+
 document.addEventListener('keydown', handleKeyDown);
 difficultySelect.addEventListener('change', handleDifficultyChange);
 

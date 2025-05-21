@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2048 Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="styles.css">   <!-- Game-specific styles -->
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>2048</h1>
-            <button id="night-mode-toggle" aria-label="Toggle night mode">
-                🌙
-            </button>
+            <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         </div>
         <div class="game-container">
             <div class="game-message">
@@ -61,7 +60,8 @@
             </select>
         </div>
     </div>
-    <script src="game.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="game.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>
 

@@ -1,0 +1,90 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #f0f4f8; /* Default light mode background */
+    color: #333; /* Default light mode text color */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em; /* Generic h1 size */
+    color: #2c3e50; /* Default h1 color */
+    margin-bottom: 20px; /* Added margin from 2048/styles.css */
+}
+
+/* Standardized Button Styles */
+/* Using a class for flexibility, but also styling button and select tags directly for broader application */
+button, select, .std-button {
+    background-color: #8f7a66; /* From 2048 buttons */
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-size: 1em; /* Adjusted from 18px to be relative */
+    color: #f9f6f2; /* From 2048 buttons */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5px; /* Added a small margin for spacing */
+}
+
+button:hover, select:hover, .std-button:hover {
+    background-color: #9f8b76; /* From 2048 buttons hover */
+}
+
+/* Standard Night Mode Styles */
+body.night-mode {
+    background-color: #1a1a2e; /* From root styles.css */
+    color: #e0e0e0; /* From root styles.css */
+}
+
+body.night-mode h1 {
+    color: #61dafb; /* From root styles.css */
+}
+
+body.night-mode button, 
+body.night-mode select, 
+body.night-mode .std-button {
+    background-color: #34495e; /* From 2048 night-mode buttons */
+    color: #ecf0f1; /* From 2048 night-mode buttons */
+}
+
+body.night-mode button:hover, 
+body.night-mode select:hover, 
+body.night-mode .std-button:hover {
+    background-color: #2c3e50; /* From 2048 night-mode buttons hover */
+}
+
+/* Global Night Mode Toggle Button Style */
+/* Copied from root styles.css - this ID should be used for the global toggle */
+#nightModeToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 24px; /* Keep as px for consistent icon size */
+    cursor: pointer;
+    color: #2c3e50; /* Default color for light mode */
+    transition: color 0.3s;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#nightModeToggle:hover {
+    color: #3498db; /* Hover color for light mode */
+}
+
+body.night-mode #nightModeToggle {
+    color: #61dafb; /* Color for night mode */
+}
+
+body.night-mode #nightModeToggle:hover {
+    color: #ffffff; /* Hover color for night mode */
+}

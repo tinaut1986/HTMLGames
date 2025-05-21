@@ -1,17 +1,11 @@
+/* FloodIt Specific Styles */
+
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-    transition: background-color 0.3s, color 0.3s;
+    /* font-family, margin, padding, base transition are from shared.css */
+    /* display, justify-content, align-items, height are removed for more component-based centering if needed */
+    background-color: #f0f0f0; /* FloodIt's specific light mode page background */
 }
-body.dark-mode {
-    background-color: #333; /* Dark background for dark mode */
-    color: #fff; /* Light text color for dark mode */
-}
+
 .game-container {
     text-align: center;
     background-color: white; /* Light background for game container */
@@ -19,64 +13,59 @@ body.dark-mode {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 20px auto; /* Added margin for centering if body is not flex centering */
+    max-width: 500px; /* Constrain width */
 }
-.dark-mode .game-container {
-    background-color: #444; /* Dark background for game container in dark mode */
-    box-shadow: 0 0 10px rgba(255,255,255,0.1);
-}
-h1 {
-    margin-bottom: 20px; /* Margin below the heading */
-}
+
+/* h1 styles are primarily from shared.css */
+
 .grid {
     display: inline-grid;
     gap: 2px; /* Space between grid cells */
     background-color: #ccc; /* Light gray background for grid */
     padding: 2px;
     border-radius: 5px;
+    margin: 15px 0; /* Added margin */
 }
+
 .cell {
     width: 20px; /* Width of each cell */
     height: 20px; /* Height of each cell */
     border-radius: 2px; /* Rounded corners for cells */
 }
+
 .color-buttons {
     margin-top: 20px; /* Space above color buttons */
+    margin-bottom: 15px; /* Added margin */
 }
+
+/* .color-button specific layout, other aspects from shared.css button */
 .color-button {
-    width: 50px; /* Width of color button */
-    height: 50px; /* Height of color button */
-    margin: 0 5px; /* Margin around color buttons */
-    border: none; /* No border for buttons */
-    border-radius: 50%; /* Circular buttons */
-    cursor: pointer; /* Pointer cursor on hover */
+    width: 40px; /* Adjusted width */
+    height: 40px; /* Adjusted height */
+    /* margin is from shared.css button */
+    /* border: none; from original, shared.css has border: none */
+    border-radius: 50%; /* Circular buttons - specific to FloodIt */
+    /* cursor: pointer; from shared.css button */
+    padding: 0; /* Override shared.css padding for circular color buttons */
+    /* background-color will be set by JS */
 }
+
 .color-button:disabled {
     opacity: 0.5; /* Reduced opacity for disabled buttons */
     cursor: not-allowed; /* Not-allowed cursor for disabled buttons */
 }
-select, button {
-    margin: 10px; /* Margin around select and button elements */
-    padding: 5px 10px; /* Padding inside select and button elements */
-    background-color: #f0f0f0; /* Light gray background for select and button elements */
-    border: 1px solid #ccc; /* Light gray border for select and button elements */
-    border-radius: 5px; /* Rounded corners for select and button elements */
-    transition: background-color 0.3s, color 0.3s;
-}
-.dark-mode select, .dark-mode button {
-    background-color: #555; /* Dark background for select and button in dark mode */
-    color: #fff; /* Light text color for select and button in dark mode */
-    border-color: #777; /* Darker border for select and button in dark mode */
-}
+
+/* Generic select and button styles are inherited from shared.css */
+/* The specific 'select, button' block from original FloodIt CSS is removed */
+
 .info {
     margin-bottom: 10px; /* Margin below info elements */
-}
-#darkModeToggle {
-    position: absolute; /* Positioning toggle button absolutely */
-    top: 10px; /* Distance from the top of the viewport */
-    right: 10px; /* Distance from the right of the viewport */
+    font-size: 0.9em; /* Slightly smaller text for info */
 }
 
-/* Rainbow animation */
+
+/* Rainbow animation - kept as is */
 @keyframes rainbow {
    0% { background-color: red; }
    14% { background-color: orange; }
@@ -87,6 +76,7 @@ select, button {
    85% { background-color: violet; }
    100% { background-color: red; }
 }
+
 .modal {
    display: none;
    position: fixed;
@@ -98,6 +88,7 @@ select, button {
    overflow: auto;
    background-color: rgba(0,0,0,0.4);
 }
+
 .modal-content {
    background-color: #fefefe;
    margin: 15% auto;
@@ -107,10 +98,7 @@ select, button {
    max-width: 600px;
    border-radius: 10px;
 }
-.dark-mode .modal-content {
-   background-color: #444;
-   color: #fff;
-}
+
 .close {
    color: #aaa;
    float: right;
@@ -118,13 +106,54 @@ select, button {
    font-weight: bold;
    cursor: pointer;
 }
+
 .close:hover,
 .close:focus {
    color: #000;
    text-decoration: none;
    cursor: pointer;
 }
-.dark-mode .close:hover,
-.dark-mode .close:focus {
+
+/* Night Mode Styles for FloodIt */
+
+body.night-mode {
+    background-color: #222; /* Darker background for FloodIt night mode page */
+    /* General text color from shared.css body.night-mode */
+}
+
+body.night-mode .game-container {
+    background-color: #333; /* Dark background for game container in night mode */
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    color: #e0e0e0; /* Ensure text inside game-container is light */
+}
+
+body.night-mode .grid {
+    background-color: #555; /* Darker gray background for grid */
+}
+
+/* .color-button in night mode: border might be useful if bg colors are dark */
+body.night-mode .color-button {
+    border: 1px solid #777; /* Add a border for dark colors on dark background */
+}
+
+body.night-mode .color-button:disabled {
+    opacity: 0.4;
+    border-color: #666;
+}
+
+/* select and button elements will inherit from shared.css body.night-mode button/select */
+
+body.night-mode .modal-content {
+   background-color: #444;
+   color: #e0e0e0; /* Light text for modal */
+   border-color: #666;
+}
+
+body.night-mode .close {
+    color: #ccc;
+}
+
+body.night-mode .close:hover,
+body.night-mode .close:focus {
    color: #fff;
 }
