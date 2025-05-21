@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Snake Game</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="style.css">   <!-- Game-specific styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for toggle -->
 </head>
 <body>
     <div class="game-container">
         <h1>Snake Game</h1>
+        <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         <div class="controls">
             <label for="difficulty">Dificultad:</label>
             <select id="difficulty">
@@ -36,6 +39,7 @@
          </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="script.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>

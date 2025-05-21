@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Towers of Hanoi</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="styles.css">   <!-- Game-specific styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> <!-- Font Awesome for toggle -->
+    <script src="https://unpkg.com/lucide@latest"></script> <!-- Keep Lucide if used for game elements -->
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Towers of Hanoi</h1>
-            <button id="darkModeToggle" aria-label="Toggle dark mode"></button>
+            <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         </div>
         <div class="controls">
             <select id="difficulty">
@@ -29,6 +31,7 @@
         <div id="moves">Moves: 0</div>
         <div id="highScore">High Score: 0</div>
     </div>
-    <script src="script.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="script.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>

@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Minesweeper</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared.css"> <!-- Shared styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- Keep existing FA -->
+    <link rel="stylesheet" href="styles.css">   <!-- Game-specific styles -->
 </head>
 <body>
     <div class="game-container">
         <div class="header">
             <h1>Minesweeper</h1>
-            <button id="toggle-theme" class="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
+            <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button> <!-- New global button -->
         </div>
         <div class="controls">
             <select id="difficulty-selector">
@@ -32,6 +31,7 @@
         <div id="game-board"></div>
         <div id="game-status"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="../script.js" defer></script> <!-- Global script -->
+    <script src="script.js" defer></script>     <!-- Game-specific script -->
 </body>
 </html>

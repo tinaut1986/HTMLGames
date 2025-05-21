@@ -33,20 +33,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // Funcionalidad del modo noche
-    function toggleNightMode() {
-        document.body.classList.toggle('night-mode');
-        const isNightMode = document.body.classList.contains('night-mode');
-        localStorage.setItem('nightMode', isNightMode);
-        nightModeToggle.innerHTML = isNightMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    function updateNightModeUI(isNightMode) {
+        if (isNightMode) {
+            document.body.classList.add('night-mode');
+            nightModeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // Sun icon for night mode
+        } else {
+            document.body.classList.remove('night-mode');
+            nightModeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // Moon icon for light mode
+        }
     }
 
-    // Cargar preferencia de modo noche
-    const savedNightMode = localStorage.getItem('nightMode');
-    if (savedNightMode === 'true') {
-        toggleNightMode();
-    }
+    // Cargar y aplicar preferencia de modo noche
+    // Convert stored value (string or null) to boolean. 'true' -> true, otherwise false.
+    let isNightModeActive = localStorage.getItem('nightMode') === 'true';
 
-    nightModeToggle.addEventListener('click', toggleNightMode);
+    // If localStorage item doesn't exist (e.g., first visit), initialize it to 'false'.
+    if (localStorage.getItem('nightMode') === null) {
+        localStorage.setItem('nightMode', 'false');
+        isNightModeActive = false; // Ensure consistency if it was null
+    }
+    
+    updateNightModeUI(isNightModeActive); // Apply the determined state
+
+    nightModeToggle.addEventListener('click', () => {
+        // Determine the new state by checking the current state of the body
+        const newIsNightMode = !document.body.classList.contains('night-mode');
+        localStorage.setItem('nightMode', newIsNightMode.toString()); // Store as 'true' or 'false'
+        updateNightModeUI(newIsNightMode);
+    });
 
     // Easter egg
     let clickCount = 0;

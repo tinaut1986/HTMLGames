@@ -1,57 +1,50 @@
+/* Snake Specific Styles */
+
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
-    font-family: sans-serif;
-    margin: 0;
-    /* Prevent scrolling on mobile */
+    /* font-family, margin from shared.css. Min-height, display, justify, align removed for component centering. */
+    background-color: #f0f0f0; /* Snake light mode page background */
+    /* Prevent scrolling and text selection - game specific */
     overflow: hidden;
-    /* Prevent text selection */
-     user-select: none;
-     -webkit-user-select: none;
-     -moz-user-select: none;
-     -ms-user-select: none;
-     /* Prevent callout menu on iOS */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     -webkit-touch-callout: none;
 }
 
 .game-container {
     text-align: center;
-    background-color: #fff;
+    background-color: #fff; /* Light mode game container background */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     position: relative; /* Needed for absolute positioning of game over message */
+    margin: 20px auto; /* For centering */
 }
 
+/* h1 color from shared.css, Snake specific margin-top and color override for light mode */
 h1 {
     margin-top: 0;
-    color: #333;
+    color: #333; /* Snake specific h1 color for light mode */
 }
 
 .controls, .scores {
     margin-bottom: 15px;
     font-size: 1.1em;
-    color: #555;
+    color: #555; /* Light mode text color for controls/scores */
 }
 
 .scores span {
     margin: 0 10px;
 }
 
-#difficulty {
-    padding: 5px;
-    font-size: 1em;
-}
+/* #difficulty select will inherit styles from shared.css */
 
 #gameCanvas {
-    border: 1px solid #ccc;
-    background-color: #f8f8f8;
-    display: block; /* Remove extra space below canvas */
-    margin: 0 auto; /* Center canvas */
-    /* Ensure canvas doesn't break layout on small screens */
+    border: 1px solid #ccc; /* Light mode canvas border */
+    background-color: #f8f8f8; /* Light mode canvas background - JS might override this */
+    display: block; 
+    margin: 0 auto; 
     max-width: 100%;
 }
 
@@ -60,17 +53,17 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for light mode */
     color: white;
     padding: 20px;
     border-radius: 5px;
     font-size: 1.2em;
-    z-index: 10; /* Ensure it's above the canvas */
+    z-index: 10;
 }
 
 .mobile-controls {
     margin-top: 20px;
-    display: none; /* Hidden by default, shown via JS/Media Query */
+    display: none; 
     flex-direction: column;
     align-items: center;
 }
@@ -80,35 +73,74 @@ h1 {
     justify-content: center;
     width: 100%;
     margin: 5px 0;
-    /* Añade la propiedad gap aquí */
-    gap: 25px; /* <--- ¡Añade esta línea! Ajusta 25px al espacio deseado */
+    gap: 25px; 
 }
 
+/* Mobile control buttons are specific and don't use shared.css button styles */
 .mobile-controls button {
     font-size: 1.5em;
     padding: 20px 30px;
     margin: 0 10px;
-    min-width: 60px; /* Ensure buttons have a decent size */
-    border: 1px solid #ccc;
-    background-color: #e0e0e0;
+    min-width: 60px; 
+    border: 1px solid #ccc; /* Light mode border */
+    background-color: #e0e0e0; /* Light mode background */
+    color: #333; /* Light mode text */
     border-radius: 5px;
     cursor: pointer;
-     /* Improve touch feedback */
     -webkit-tap-highlight-color: rgba(0,0,0,0.1);
 }
 
 .mobile-controls button:active {
-    background-color: #d0d0d0;
+    background-color: #d0d0d0; /* Light mode active background */
 }
 
-/* Show mobile controls on smaller screens */
 @media (max-width: 600px) {
     .mobile-controls {
         display: flex;
     }
-    /* Optional: Adjust canvas size for smaller screens */
-    /* #gameCanvas {
-        width: 280px;
-        height: 280px;
-    } */
+}
+
+/* Night Mode Styles for Snake */
+
+body.night-mode {
+    background-color: #121212; /* Darker page background for Snake night mode */
+}
+
+body.night-mode .game-container {
+    background-color: #1e1e1e; /* Dark container background */
+    color: #e0e0e0; /* Light text for container content */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Darker shadow */
+}
+
+/* h1 color is handled by shared.css body.night-mode h1 */
+body.night-mode h1 {
+     color: #61dafb; /* Ensuring it aligns with shared.css if there was an override */
+}
+
+
+body.night-mode .controls, 
+body.night-mode .scores {
+    color: #b0b0b0; /* Lighter text for controls/scores in night mode */
+}
+
+/* #difficulty select will inherit night mode styles from shared.css */
+
+body.night-mode #gameCanvas {
+    border-color: #444; /* Darker border for canvas */
+    /* background-color will be handled by JS for night mode */
+}
+
+body.night-mode .game-over-message {
+    background-color: rgba(220, 220, 220, 0.8); /* Light overlay for dark mode */
+    color: #1e1e1e; /* Dark text for message */
+}
+
+body.night-mode .mobile-controls button {
+    border-color: #555; /* Darker border */
+    background-color: #333; /* Dark background */
+    color: #e0e0e0; /* Light text */
+}
+
+body.night-mode .mobile-controls button:active {
+    background-color: #444; /* Darker active background */
 }
