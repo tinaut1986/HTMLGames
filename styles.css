@@ -1,38 +1,4 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s, color 0.3s;
-    background-color: #f0f4f8;
-    color: #333;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1 {
-    text-align: center;
-    color: #2c3e50;
-}
-
-#nightModeToggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #2c3e50;
-    transition: color 0.3s;
-}
-
-#nightModeToggle:hover {
-    color: #3498db;
-}
+/* Styles specific to the game listing page */
 
 #gameList {
     display: grid;
@@ -63,23 +29,7 @@ h1 {
     vertical-align: middle;
 }
 
-body.night-mode {
-    background-color: #1a1a2e;
-    color: #e0e0e0;
-}
-
-body.night-mode h1 {
-    color: #61dafb;
-}
-
-body.night-mode #nightModeToggle {
-    color: #61dafb;
-}
-
-body.night-mode #nightModeToggle:hover {
-    color: #ffffff;
-}
-
+/* Night mode specific styles for game listing */
 body.night-mode .game-item {
     background-color: #16213e;
     color: #e0e0e0;
@@ -90,6 +40,7 @@ body.night-mode .game-item:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
+/* Footer styles */
 footer {
     text-align: center;
     margin-top: 40px;
@@ -100,5 +51,3 @@ footer {
 body.night-mode footer {
     color: #bdc3c7;
 }
-
-

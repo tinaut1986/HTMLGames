@@ -30,7 +30,7 @@ const undoButton = document.getElementById('undoButton');
 const confirmButton = document.getElementById('confirmButton');
 const messageElement = document.getElementById('message');
 const remainingAttemptsElement = document.getElementById('remainingAttempts');
-const darkModeToggle = document.getElementById('darkModeToggle');
+// Removed: const darkModeToggle = document.getElementById('darkModeToggle');
 const iconThemeSelect = document.getElementById('iconTheme');
 const difficultySelect = document.getElementById('difficulty');
 
@@ -281,7 +281,7 @@ function saveGameState() {
     };
 
     existingState.theme = currentTheme;
-    existingState.darkMode = document.body.classList.contains('dark-mode');
+    // Removed: existingState.darkMode = document.body.classList.contains('dark-mode');
     
     localStorage.setItem(gameStateKey, JSON.stringify(existingState));
 }
@@ -312,13 +312,8 @@ function loadGameState(savedState = null) {
     iconThemeSelect.value = currentTheme;
     difficultySelect.value = difficulty.toString();
 
-    if (savedState.darkMode) {
-        document.body.classList.add('dark-mode');
-        darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'sun');
-    } else {
-        document.body.classList.remove('dark-mode');
-        darkModeToggle.querySelector('svg').setAttribute('data-lucide', 'moon');
-    }
+    // Removed dark mode loading logic from here, handled by global script.js
+    // The old darkModeToggle button is also removed.
 
     updateUI();
     updateCalendar();
@@ -423,19 +418,7 @@ function selectDate(date) {
 
 undoButton.addEventListener('click', undoLastSelection);
 confirmButton.addEventListener('click', () => checkCombination(false));
-darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const icon = darkModeToggle.querySelector('svg');
-
-    if (document.body.classList.contains('dark-mode')) {
-        icon.setAttribute('data-lucide', 'sun');
-    } else {
-        icon.setAttribute('data-lucide', 'moon');
-    }
-
-    lucide.createIcons();
-    saveGameState();
-});
+// Removed: darkModeToggle.addEventListener('click', ...)
 
 iconThemeSelect.addEventListener('change', (e) => {
     currentTheme = e.target.value;

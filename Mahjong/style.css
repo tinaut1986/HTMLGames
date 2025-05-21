@@ -3,62 +3,32 @@
     --font-primary: 'Poppins', sans-serif;
     --font-kanji: 'Noto Sans JP', sans-serif;
 
-    /* Light Mode */
-    --bg-color-light: #f4f7f9;
-    --text-color-light: #334155;
-    --board-bg-light: #e2e8f0;
-    --tile-bg-light: linear-gradient(145deg, #ffffff, #e6e6e6);
-    --tile-shadow-light: 5px 5px 10px #c8cdd3, -5px -5px 10px #ffffff;
-    --tile-border-light: #cbd5e1;
-    --tile-text-light: #1e293b;
-    --tile-selected-bg-light: linear-gradient(145deg, #a6d8ff, #8cc0e6);
-    --tile-selected-shadow-light: inset 3px 3px 6px #7da9cc, inset -3px -3px 6px #c4f7ff;
-    --tile-selected-border-light: #60a5fa;
-    --button-bg-light: #ffffff;
-    --button-shadow-light: 3px 3px 6px #d1d9e6, -3px -3px 6px #ffffff;
-    --button-hover-bg-light: #eef4ff;
-    --control-text-light: #475569;
-    --icon-color-light: #475569;
-    --icon-hover-light: #1e40af;
+    /* Light Mode - Mahjong Specific */
+    --mahjong-page-bg-light: #f4f7f9;
+    --mahjong-text-light: #334155; /* General text on page */
+    --mahjong-board-bg-light: #e2e8f0;
+    --mahjong-tile-bg-light: linear-gradient(145deg, #ffffff, #e6e6e6);
+    --mahjong-tile-shadow-light: 5px 5px 10px #c8cdd3, -5px -5px 10px #ffffff;
+    --mahjong-tile-border-light: #cbd5e1;
+    --mahjong-tile-text-light: #1e293b;
+    --mahjong-tile-selected-bg-light: linear-gradient(145deg, #a6d8ff, #8cc0e6);
+    --mahjong-tile-selected-shadow-light: inset 3px 3px 6px #7da9cc, inset -3px -3px 6px #c4f7ff;
+    --mahjong-tile-selected-border-light: #60a5fa;
+    --mahjong-control-text-light: #475569; /* For labels like "Iconos:" */
 
-
-    /* Dark Mode */
-    --bg-color-dark: #1e293b;
-    --text-color-dark: #e2e8f0;
-    --board-bg-dark: #334155;
-    --tile-bg-dark: linear-gradient(145deg, #4a5a70, #3e4c5f);
-    --tile-shadow-dark: 5px 5px 10px #2b3748, -5px -5px 10px #516378;
-    --tile-border-dark: #475569;
-    --tile-text-dark: #f1f5f9;
-    --tile-selected-bg-dark: linear-gradient(145deg, #4f8bc0, #3a70a1);
-    --tile-selected-shadow-dark: inset 3px 3px 6px #325c81, inset -3px -3px 6px #68baff;
-    --tile-selected-border-dark: #3b82f6;
-    --button-bg-dark: #334155;
-    --button-shadow-dark: 3px 3px 6px #273243, -3px -3px 6px #3f5067;
-    --button-hover-bg-dark: #475569;
-    --control-text-dark: #cbd5e1;
-    --icon-color-dark: #94a3b8;
-    --icon-hover-dark: #60a5fa;
+    /* Dark Mode variables are removed from :root, will be handled by body.night-mode rules */
 }
 
 /* --- Estilos Generales --- */
 body {
-    font-family: var(--font-primary);
-    background-color: var(--bg-color-light);
-    color: var(--text-color-light);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 15px;
-    min-height: 100vh;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    font-family: var(--font-primary); /* Mahjong keeps its primary font */
+    background-color: var(--mahjong-page-bg-light);
+    color: var(--mahjong-text-light);
+    /* display, flex-direction, align-items, margin, padding, min-height from shared.css or handled by containers */
+    /* transition is in shared.css body */
 }
 
-body.dark-mode {
-    background-color: var(--bg-color-dark);
-    color: var(--text-color-dark);
-}
+/* Removed body.dark-mode rule, will be replaced by body.night-mode */
 
 .header-container {
     display: flex;
@@ -70,10 +40,12 @@ body.dark-mode {
     margin-bottom: 15px;
 }
 
+/* h1 styles are primarily from shared.css */
 h1 {
-    margin: 0;
-    font-size: 1.8em;
+    margin: 0; /* Keep Mahjong's specific h1 margin override */
+    font-size: 1.8em; /* Mahjong specific size */
     font-weight: 600;
+    /* color will be inherited from shared.css h1 */
 }
 
 .controls {
@@ -83,200 +55,80 @@ h1 {
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-    color: var(--control-text-light);
+    color: var(--mahjong-control-text-light); /* Use Mahjong specific variable */
+    max-width: 700px; /* Match header-container */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-body.dark-mode .controls {
-    color: var(--control-text-dark);
-}
+/* Removed body.dark-mode .controls rule */
 
+/* Generic button and select styles are inherited from shared.css */
+/* Removed Mahjong-specific button, select styles for neumorphic look. */
+/* Custom select arrow is also removed. */
 
-button,
-select {
-    padding: 10px 18px;
-    font-size: 0.95em;
-    font-family: inherit;
-    cursor: pointer;
-    background-color: var(--button-bg-light);
-    color: var(--control-text-light);
-    border: none;
-    border-radius: 8px;
-    box-shadow: var(--button-shadow-light);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-body.dark-mode button,
-body.dark-mode select {
-    background-color: var(--button-bg-dark);
-    color: var(--control-text-dark);
-    box-shadow: var(--button-shadow-dark);
-}
-
-button:hover,
-select:hover {
-    background-color: var(--button-hover-bg-light);
-}
-
-body.dark-mode button:hover,
-body.dark-mode select:hover {
-    background-color: var(--button-hover-bg-dark);
-}
-
-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 35px;
-    /* Asegurar fondo */
-    background-color: var(--button-bg-light);
-}
-
-body.dark-mode select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-color: var(--button-bg-dark);
-}
+/* Removed all body.dark-mode button, select styles */
+/* Removed all button:hover, select:hover styles (shared.css handles this) */
+/* Removed select specific background-image and padding-right, background-color (shared.css handles this) */
+/* Removed body.dark-mode select specific background-image and background-color */
 
 
 #game-info {
     font-size: 0.9em;
     min-width: 150px;
     text-align: center;
-    /* Añadir padding para consistencia */
-    padding: 10px 0;
+    padding: 10px 0; /* Keep padding for layout */
+    color: var(--mahjong-control-text-light); /* Use Mahjong specific variable */
 }
 
-/* --- Botón Tema --- */
-#toggle-theme {
-    background: none;
-    border: none;
-    /* Ajustar padding para que el icono sea el área clickeable */
-    padding: 5px;
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Tamaño fijo */
-    width: 40px;
-    height: 40px;
-    /* Quitar sombra de botón normal */
-    box-shadow: none;
-    /* Para posicionar iconos */
-    position: relative;
-    /* Para la animación */
-    overflow: hidden;
-    /* Transición de fondo al hacer hover */
-    transition: background-color 0.3s ease;
-}
-
-#toggle-theme:hover {
-    /* Ligero fondo al pasar el ratón */
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode #toggle-theme:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-
-#toggle-theme svg {
-    position: absolute;
-    transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
-    /* Color inicial */
-    fill: var(--icon-color-light);
-}
-
-body.dark-mode #toggle-theme svg {
-    fill: var(--icon-color-dark);
-}
-
-#toggle-theme svg.sun {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
-
-#toggle-theme svg.moon {
-    opacity: 0;
-    transform: rotate(90deg) scale(0);
-}
-
-body.dark-mode #toggle-theme svg.sun {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0);
-}
-
-body.dark-mode #toggle-theme svg.moon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
+/* --- Removed Botón Tema (#toggle-theme and its SVG styles) --- */
 
 
 /* --- Tablero y Fichas --- */
 #game-board-container {
     position: relative;
-    /* Ancho relativo */
     width: 90vw;
-    /* Ancho máximo */
     max-width: 650px;
-    /* Height será determinado por el contenido y aspect-ratio si es necesario */
-    /* Altura mínima */
     min-height: 450px;
     margin: 0 auto;
-    background-color: var(--board-bg-light);
+    background-color: var(--mahjong-board-bg-light); /* Use Mahjong specific variable */
     border-radius: 10px;
-    /* Espacio interior */
     padding: 10px;
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
     transition: background-color 0.4s ease;
-    /* Espacio debajo */
     margin-bottom: 20px;
 }
 
-body.dark-mode #game-board-container {
-    background-color: var(--board-bg-dark);
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
-}
+/* Removed body.dark-mode #game-board-container rule */
 
 #game-board {
     position: relative;
     width: 100%;
-    /* Ocupa el contenedor */
     height: 100%;
 }
 
 .tile {
     position: absolute;
-    /* Más grande */
     width: 50px;
-    /* Más grande */
     height: 70px;
-    background: var(--tile-bg-light);
-    border: 1px solid var(--tile-border-light);
-    /* Esquinas redondeadas */
+    background: var(--mahjong-tile-bg-light); /* Use Mahjong specific variable */
+    border: 1px solid var(--mahjong-tile-border-light); /* Use Mahjong specific variable */
     border-radius: 6px;
     box-sizing: border-box;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Tamaño base */
     font-size: 24px;
     font-weight: bold;
-    color: var(--tile-text-light);
+    color: var(--mahjong-tile-text-light); /* Use Mahjong specific variable */
     user-select: none;
     transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease-out, opacity 0.3s ease, box-shadow 0.3s ease;
-    /* Offset visual para efecto 3D leve */
-    box-shadow: var(--tile-shadow-light);
+    box-shadow: var(--mahjong-tile-shadow-light); /* Use Mahjong specific variable */
     transform: translate(0, 0);
 }
 
-body.dark-mode .tile {
-    background: var(--tile-bg-dark);
-    border-color: var(--tile-border-dark);
-    color: var(--tile-text-dark);
-    box-shadow: var(--tile-shadow-dark);
-}
+/* Removed body.dark-mode .tile rule */
 
 /* Ajuste de tamaño de fuente por set de icono */
 .tile.icon-kanji {
@@ -295,44 +147,30 @@ body.dark-mode .tile {
 
 /* Efecto Hover para fichas libres */
 .tile:not(.not-free):not(.selected):hover {
-    /* Levantar un poco */
     transform: translateY(-3px) scale(1.02);
     box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.15);
 }
 
-body.dark-mode .tile:not(.not-free):not(.selected):hover {
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.3);
-}
+/* Removed body.dark-mode .tile:not(.not-free):not(.selected):hover rule */
 
 
 .tile.not-free {
     cursor: default;
-    /* Podríamos añadir un filtro o quitarle saturación */
     opacity: 0.7;
     filter: grayscale(30%);
 }
 
-body.dark-mode .tile.not-free {
-    filter: grayscale(50%);
-    opacity: 0.6;
-}
+/* Removed body.dark-mode .tile.not-free rule */
 
 .tile.selected {
-    background: var(--tile-selected-bg-light);
-    border-color: var(--tile-selected-border-light);
-    /* Sombra interior */
-    box-shadow: var(--tile-selected-shadow-light);
-    /* Resaltar más */
+    background: var(--mahjong-tile-selected-bg-light); /* Use Mahjong specific variable */
+    border-color: var(--mahjong-tile-selected-border-light); /* Use Mahjong specific variable */
+    box-shadow: var(--mahjong-tile-selected-shadow-light); /* Use Mahjong specific variable */
     transform: scale(1.05) translateY(-2px);
-    /* Asegurar que se vea bien al seleccionar */
     z-index: 100 !important;
 }
 
-body.dark-mode .tile.selected {
-    background: var(--tile-selected-bg-dark);
-    border-color: var(--tile-selected-border-dark);
-    box-shadow: var(--tile-selected-shadow-dark);
-}
+/* Removed body.dark-mode .tile.selected rule */
 
 .tile.matched {
     opacity: 0;
@@ -343,12 +181,11 @@ body.dark-mode .tile.selected {
 
 /* Mensajes */
 .message {
-    /* Que se quede fijo en la pantalla */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for contrast in light mode */
     color: white;
     padding: 30px 40px;
     border-radius: 12px;
@@ -357,123 +194,93 @@ body.dark-mode .tile.selected {
     z-index: 1000;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
+.message.hidden { display: none; }
 
-.message.hidden {
-    display: none;
+/* --- Night Mode Styles --- */
+body.night-mode {
+    background-color: #1e293b; /* Using Mahjong specific dark vars if available, else from shared.css */
+    color: #e2e8f0;
 }
+
+body.night-mode .header-container h1 {
+    /* h1 color is handled by shared.css body.night-mode h1 */
+}
+
+body.night-mode .controls {
+    color: #cbd5e1; /* --mahjong-control-text-dark */
+}
+
+body.night-mode #game-info {
+    color: #cbd5e1; /* --mahjong-control-text-dark */
+}
+
+/* Buttons and select will use shared.css night mode styles */
+
+body.night-mode #game-board-container {
+    background-color: #334155; /* --mahjong-board-bg-dark */
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+body.night-mode .tile {
+    background: linear-gradient(145deg, #4a5a70, #3e4c5f); /* --mahjong-tile-bg-dark */
+    border-color: #475569; /* --mahjong-tile-border-dark */
+    color: #f1f5f9; /* --mahjong-tile-text-dark */
+    box-shadow: 5px 5px 10px #2b3748, -5px -5px 10px #516378; /* --mahjong-tile-shadow-dark */
+}
+
+body.night-mode .tile:not(.not-free):not(.selected):hover {
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.night-mode .tile.not-free {
+    filter: grayscale(50%);
+    opacity: 0.6;
+}
+
+body.night-mode .tile.selected {
+    background: linear-gradient(145deg, #4f8bc0, #3a70a1); /* --mahjong-tile-selected-bg-dark */
+    border-color: #3b82f6; /* --mahjong-tile-selected-border-dark */
+    box-shadow: inset 3px 3px 6px #325c81, inset -3px -3px 6px #68baff; /* --mahjong-tile-selected-shadow-dark */
+}
+
+body.night-mode .message {
+    background-color: rgba(220, 220, 220, 0.9); /* Light background for contrast in dark mode */
+    color: #1e293b; /* Dark text */
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
 
 /* --- Responsividad --- */
 @media (max-width: 768px) {
-    h1 {
-        font-size: 1.6em;
-    }
-
-    .controls {
-        gap: 10px;
-    }
-
-    #game-board-container {
-        width: 95vw;
-        /* Ajustar altura mínima */
-        min-height: 400px;
-        padding: 8px;
-    }
-
-    .tile {
-        /* Reducir tamaño */
-        width: 45px;
-        height: 63px;
-        font-size: 20px;
-        border-radius: 5px;
-    }
-
-    .tile.icon-kanji {
-        font-size: 24px;
-    }
-
-    .tile.icon-symbols {
-        font-size: 26px;
-    }
-
-    .tile.icon-emoji {
-        font-size: 26px;
-    }
-
-    .message {
-        font-size: 1.2em;
-        padding: 25px 35px;
-    }
+    h1 { font-size: 1.6em; } /* Mahjong specific h1 size adjustment */
+    .controls { gap: 10px; }
+    #game-board-container { width: 95vw; min-height: 400px; padding: 8px; }
+    .tile { width: 45px; height: 63px; font-size: 20px; border-radius: 5px; }
+    .tile.icon-kanji { font-size: 24px; }
+    .tile.icon-symbols { font-size: 26px; }
+    .tile.icon-emoji { font-size: 26px; }
+    .message { font-size: 1.2em; padding: 25px 35px; }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding: 10px;
+    body { padding: 10px; }
+    .header-container { flex-direction: column; gap: 10px; margin-bottom: 10px; }
+    h1 { font-size: 1.4em; } /* Mahjong specific h1 size adjustment */
+    .controls { flex-direction: column; align-items: stretch; gap: 8px; width: 90%; }
+    /* Buttons and selects take full width from shared.css if display:block or width:100% is there for mobile */
+    /* If not, they will just stack. shared.css does not make them full width by default. */
+    /* Re-adding width: 100% for Mahjong mobile controls if needed */
+    body.night-mode .controls button, body.night-mode .controls select,
+    .controls button, .controls select {
+         width: 100%; 
+         box-sizing: border-box;
     }
 
-    .header-container {
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    h1 {
-        font-size: 1.4em;
-    }
-
-    .controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        width: 90%;
-    }
-
-    button,
-    select {
-        padding: 10px 15px;
-        font-size: 0.9em;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    select {
-        background-position: right 10px center;
-        padding-right: 30px;
-    }
-
-    #game-info {
-        text-align: center;
-        width: 100%;
-    }
-
-    #game-board-container {
-        width: 98vw;
-        min-height: 350px;
-        padding: 5px;
-    }
-
-    .tile {
-        /* Aún más pequeño */
-        width: 38px;
-        height: 53px;
-        font-size: 16px;
-        border-radius: 4px;
-    }
-
-    .tile.icon-kanji {
-        font-size: 20px;
-    }
-
-    .tile.icon-symbols {
-        font-size: 22px;
-    }
-
-    .tile.icon-emoji {
-        font-size: 22px;
-    }
-
-    .message {
-        font-size: 1.1em;
-        padding: 20px 30px;
-        width: 80%;
-    }
+    #game-info { text-align: center; width: 100%; }
+    #game-board-container { width: 98vw; min-height: 350px; padding: 5px; }
+    .tile { width: 38px; height: 53px; font-size: 16px; border-radius: 4px; }
+    .tile.icon-kanji { font-size: 20px; }
+    .tile.icon-symbols { font-size: 22px; }
+    .tile.icon-emoji { font-size: 22px; }
+    .message { font-size: 1.1em; padding: 20px 30px; width: 80%; }
 }

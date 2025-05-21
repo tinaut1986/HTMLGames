@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elementos del DOM ---
     const gameBoard = document.getElementById('game-board');
-    const toggleThemeButton = document.getElementById('toggle-theme');
+    // Removed: const toggleThemeButton = document.getElementById('toggle-theme');
     const iconSetSelector = document.getElementById('icon-set-selector');
     const resetGameButton = document.getElementById('reset-game');
     const pairsLeftSpan = document.getElementById('pairs-left');
@@ -369,24 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.classList.remove('hidden');
     }
 
-    // --- Control de Tema ---
-    function applyTheme(theme) {
-        if (theme === 'dark') {
-            body.classList.add('dark-mode');
-        } else {
-            body.classList.remove('dark-mode');
-        }
-        localStorage.setItem('mahjongTheme', theme);
-    }
-
-    toggleThemeButton.addEventListener('click', () => {
-        const currentTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
-        applyTheme(currentTheme);
-    });
-
-    // Aplicar tema guardado al cargar
-    const savedTheme = localStorage.getItem('mahjongTheme') || 'light'; // Default to light
-    applyTheme(savedTheme);
+    // --- Removed: Control de Tema (applyTheme, toggleThemeButton listener, initial load) ---
 
     // --- Control de Set de Iconos ---
     iconSetSelector.addEventListener('change', (event) => {

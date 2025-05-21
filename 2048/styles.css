@@ -1,25 +1,29 @@
+/* Game-specific styles for 2048 */
+
+/* Retained body styles for centering, specific background for this page */
 body {
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    background-color: #faf8ef;
-    transition: background-color 0.3s ease;
+    padding: 20px; /* Keep padding for body */
+    background-color: #faf8ef; /* Specific light mode background for 2048 page */
     box-sizing: border-box;
+    /* font-family, margin, general transition, and color are from shared.css */
 }
 
+/* Retained .container styles for specific max-width and text-align for this page */
 .container {
     text-align: center;
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Specific max-width for 2048 game */
+    /* General margin, padding are from shared.css */
 }
 
+/* Retained h1 styles for specific font-size for this page */
 h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
+    font-size: 48px; /* Specific font size for 2048 game title */
+    /* text-align, color, margin-bottom are from shared.css */
 }
 
 .game-container {
@@ -90,9 +94,11 @@ h1 {
     margin-top: 20px;
 }
 
+/* Specific layout for game controls buttons/select, not their base appearance */
 .game-controls button, .game-controls select {
     margin: 0 5px;
-    padding: 5px 10px;
+    padding: 5px 10px; /* Smaller padding for these specific controls */
+    /* Base appearance (bg, color, border, radius etc) from shared.css */
 }
 
 .game-message {
@@ -122,9 +128,10 @@ h1 {
     margin-top: 59px;
 }
 
+/* Styling for links within game messages, not general buttons */
 .game-message a {
     display: inline-block;
-    background: #8f7a66;
+    background: #8f7a66; /* This is the same as shared button, but these are links not buttons */
     border-radius: 3px;
     padding: 0 20px;
     text-decoration: none;
@@ -134,43 +141,11 @@ h1 {
     margin-left: 9px;
     cursor: pointer;
 }
-
-.night-mode {
-    background-color: #2c3e50;
-    color: #ecf0f1;
+/* Hover for game message links */
+.game-message a:hover {
+    background: #9f8b76;
 }
 
-.night-mode .game-container {
-    background-color: #34495e;
-}
-
-.night-mode .grid-cell {
-    background-color: rgba(52, 73, 94, 0.35);
-}
-
-.night-mode .tile {
-    color: #ecf0f1;
-}
-
-.night-mode .tile-2, .night-mode .tile-4 {
-    background-color: #3498db;
-}
-
-.night-mode .tile-8, .night-mode .tile-16 {
-    background-color: #2980b9;
-}
-
-.night-mode .tile-32, .night-mode .tile-64 {
-    background-color: #16a085;
-}
-
-.night-mode .tile-128, .night-mode .tile-256 {
-    background-color: #27ae60;
-}
-
-.night-mode .tile-512, .night-mode .tile-1024, .night-mode .tile-2048 {
-    background-color: #f39c12;
-}
 
 @keyframes fade-in {
     0% {
@@ -185,53 +160,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-#night-mode-toggle {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-}
-
-#night-mode-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.night-mode #night-mode-toggle {
-    color: #ecf0f1;
-}
-
-.night-mode #night-mode-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-button, select {
-    background-color: #8f7a66;
-    border: none;
-    border-radius: 3px;
-    padding: 10px 20px;
-    font-size: 18px;
-    color: #f9f6f2;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover, select:hover {
-    background-color: #9f8b76;
-}
-
-.night-mode button, .night-mode select {
-    background-color: #34495e;
-    color: #ecf0f1;
-}
-
-.night-mode button:hover, .night-mode select:hover {
-    background-color: #2c3e50;
+    margin-bottom: 20px; /* This was on h1 in shared.css, but here it's on header */
 }
 
 @media (max-width: 520px) {
@@ -246,4 +175,62 @@ button:hover, select:hover {
     }
 }
 
+/* NEW Night Mode Styles for 2048 Game Elements (prefixed with body.night-mode) */
+body.night-mode {
+    background-color: #2c3e50; /* Specific night mode background for 2048 page */
+    /* General night mode text color from shared.css */
+}
 
+body.night-mode .game-container {
+    background-color: #34495e;
+}
+
+body.night-mode .grid-cell {
+    background-color: rgba(52, 73, 94, 0.35);
+}
+
+body.night-mode .tile {
+    color: #ecf0f1; /* General tile text color in night mode */
+}
+
+/* Specific tile background colors in night mode */
+body.night-mode .tile-2, 
+body.night-mode .tile-4 { 
+    background-color: #3498db; 
+    color: #f9f6f2; /* Ensure text is visible, same as other colored tiles */
+}
+body.night-mode .tile-8, 
+body.night-mode .tile-16 { 
+    background-color: #2980b9; 
+    color: #f9f6f2;
+}
+body.night-mode .tile-32, 
+body.night-mode .tile-64 { 
+    background-color: #16a085; 
+    color: #f9f6f2;
+}
+body.night-mode .tile-128, 
+body.night-mode .tile-256 { 
+    background-color: #27ae60; 
+    color: #f9f6f2;
+}
+body.night-mode .tile-512, 
+body.night-mode .tile-1024, 
+body.night-mode .tile-2048 { 
+    background-color: #f39c12; 
+    color: #f9f6f2;
+}
+
+/* Night mode for game message links */
+body.night-mode .game-message a {
+    background-color: #34495e; /* Consistent with shared night mode buttons */
+    color: #ecf0f1;
+}
+body.night-mode .game-message a:hover {
+    background-color: #2c3e50; /* Consistent with shared night mode buttons hover */
+}
+
+/* Ensure h1 color is from shared.css in night mode (body.night-mode h1) */
+/* Ensure button/select colors are from shared.css in night mode (body.night-mode button, body.night-mode select) */
+/* The specific .game-controls button/select padding/margin does not need a night mode version */
+/* Text color on the page and inside .container will be handled by body.night-mode color from shared.css */

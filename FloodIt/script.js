@@ -21,7 +21,7 @@ const restartButton = document.getElementById('restartButton');
 const movesElement = document.getElementById('moves');
 const scoreElement = document.getElementById('score');
 const highScoreElement = document.getElementById('highScore');
-const darkModeToggle = document.getElementById('darkModeToggle');
+// Removed: const darkModeToggle = document.getElementById('darkModeToggle');
 const instructionsButton = document.getElementById('instructionsButton');
 const instructionsModal = document.getElementById('instructionsModal');
 const closeModal = document.getElementsByClassName('close')[0];
@@ -193,19 +193,9 @@ function loadTranslations() {
         });
 }
 
-/// Toggles dark mode for better user experience at night.
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-}
-
-// Event listener for dark mode toggle
-darkModeToggle.onclick = toggleDarkMode;
-
-// Load dark mode preference from local storage
-if (localStorage.getItem('darkMode') === 'true') {
-     document.body.classList.add('dark-mode');
-}
+// Removed: toggleDarkMode() function
+// Removed: darkModeToggle.onclick event listener
+// Removed: Loading dark mode preference (localStorage.getItem('darkMode'))
 
 // Easter egg sequence detection
 let easterEggSequence = [];

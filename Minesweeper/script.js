@@ -212,29 +212,9 @@ function stopTimer() {
     clearInterval(timer);
 }
 
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-    updateThemeIcon();
-}
-
-function updateThemeIcon() {
-    const themeIcon = document.querySelector('#toggle-theme i');
-    if (document.body.classList.contains('dark-mode')) {
-        themeIcon.className = 'fas fa-sun';
-    } else {
-        themeIcon.className = 'fas fa-moon';
-   }
-}
-
-function loadThemePreference() {
-   const isDarkMode= localStorage.getItem('darkMode') === 'true';
-   if(isDarkMode){
-       document.body.classList.add('dark-mode');
-   }
-   updateThemeIcon();
-}
+// Removed: toggleTheme() function
+// Removed: updateThemeIcon() function
+// Removed: loadThemePreference() function
 
 function ensureSafeFirstClick(row, col) {
    // Ensure that the first click is not on a mine or a number
@@ -253,7 +233,7 @@ function resetBoard() {
 
 document.getElementById('difficulty-selector').addEventListener('change', setDifficulty);
 document.getElementById('reset-game').addEventListener('click', resetGame);
-document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
+// Removed: document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
 
-loadThemePreference();
+// Removed: loadThemePreference();
 setDifficulty(); // Initialize the game with the default difficulty

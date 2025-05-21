@@ -1,9 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #2c5e2e;
-    color: white;
-    margin: 0;
-    padding: 0;
+    /* font-family, margin, padding are from shared.css */
+    background-color: #2c5e2e; /* Specific green background for BlackJack light mode */
+    color: white; /* Specific text color for BlackJack light mode */
+    /* transition for background-color and color is in shared.css */
 }
 
 .container {
@@ -27,22 +26,24 @@ h1 {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    flex-wrap: wrap; /* Added to handle multiple hands properly */
 }
 
 .card {
     width: 60px;
     height: 90px;
-    background-color: white;
+    background-color: white; /* Default card color for light mode */
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    color: black;
+    color: black; /* Default card text color for light mode */
+    border: 1px solid #333; /* Added a border for better definition */
 }
 
 .card.red {
-    color: red;
+    color: red; /* Red text for heart/diamond cards */
 }
 
 #controls {
@@ -50,18 +51,18 @@ h1 {
     gap: 10px;
     margin-top: 20px;
     flex-wrap: wrap;
+    justify-content: center; /* Center control buttons */
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
+/* Basic button styling is removed to inherit from shared.css */
+/* Individual buttons will use shared.css styles. */
 
 input[type="number"] {
     width: 100px;
     padding: 10px;
     font-size: 16px;
+    border-radius: 3px; /* Match shared button style */
+    border: 1px solid #ccc; /* Basic border */
 }
 
 .modal {
@@ -73,33 +74,81 @@ input[type="number"] {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.6); /* Slightly darker overlay */
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
+    background-color: #f0f4f8; /* Light background for modal in light mode */
+    margin: 10% auto; /* Adjusted margin for better centering */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
-    color: black;
+    color: #333; /* Dark text for modal in light mode */
+    border-radius: 5px; /* Added border-radius */
+}
+
+.modal-content h2 {
+    color: #2c3e50; /* Match shared h1 color for consistency */
 }
 
 .active-hand {
     border: 2px solid yellow;
     padding: 10px;
     border-radius: 5px;
+    margin-bottom: 10px; /* Space between multiple hands */
 }
 
-.win {
-    border: 2px solid green;
+.win { border: 2px solid #28a745; /* Green for win */ }
+.lose { border: 2px solid #dc3545; /* Red for lose */ }
+.push { border: 2px solid #17a2b8; /* Blue for push */ }
+
+
+/* Night Mode Specific Styles for BlackJack */
+
+body.night-mode {
+    background-color: #1a2a1a; /* Darker green for BlackJack night mode */
+    color: #cccccc; /* Light gray text for BlackJack night mode */
 }
 
-.lose {
-    border: 2px solid red;
+body.night-mode #game-area {
+    background-color: #142014; /* Even darker green for game area in night mode */
 }
 
-.push {
-    border: 2px solid blue;
+body.night-mode .card {
+    background-color: #3e3e3e; /* Dark gray for cards in night mode */
+    color: #f0f0f0; /* Light text for cards in night mode */
+    border: 1px solid #555; /* Darker border for cards */
 }
+
+body.night-mode .card.red {
+    color: #ff7f7f; /* Lighter red for night mode */
+}
+
+/* Score text color will be inherited from body.night-mode color. */
+/* Buttons will use body.night-mode button styles from shared.css */
+
+body.night-mode input[type="number"] {
+    background-color: #333;
+    color: #ccc;
+    border-color: #555;
+}
+
+body.night-mode .modal-content {
+    background-color: #2b2b2b; /* Dark background for modal in night mode */
+    color: #cccccc; /* Light text for modal in night mode */
+    border-color: #444;
+}
+
+body.night-mode .modal-content h2 {
+    color: #61dafb; /* Match shared.css body.night-mode h1 color */
+}
+
+body.night-mode .active-hand {
+    border-color: #ffd700; /* Keep yellow, maybe a bit brighter if needed */
+}
+
+/* Win/Lose/Push borders might need adjustment if yellow isn't distinct enough */
+body.night-mode .win { border-color: #30c050; }
+body.night-mode .lose { border-color: #ff5060; }
+body.night-mode .push { border-color: #20b0c8; }
