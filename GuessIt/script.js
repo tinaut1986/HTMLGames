@@ -86,7 +86,8 @@ function initializeGame(selectToday) {
             board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
             completed: false,
             message: '',
-            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty),
+            iconsTriedInGuesses: [] // New property initialized
         };
         gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
         usedIcons[difficulty] = {};
@@ -133,21 +134,27 @@ function updateUI() {
     iconSelectorElement.style.gridTemplateColumns = `repeat(${Math.ceil(availableIcons / 3)}, 1fr)`;
 
     const icons = iconThemes[currentTheme].slice(0, availableIcons);
-    icons.forEach((icon, index) => {
+    icons.forEach((iconName, index) => { // Assuming 'iconName' is the actual name/char, 'index' is the icon's numerical ID
         const iconOption = document.createElement('div');
-        iconOption.className = 'icon-option';
-        iconOption.innerHTML = renderIcon(index);
+        
+        // Reset classes: start with base class only
+        iconOption.className = 'icon-option'; 
+        
+        iconOption.innerHTML = renderIcon(index); // 'index' is used as the icon identifier
         iconOption.onclick = () => selectIcon(index);
-        // Marcar iconos según su estado
-        if (usedIcons[difficulty] && usedIcons[difficulty][index]) {
-            if (usedIcons[difficulty][index] === 'all') {
-                iconOption.classList.add('all-found');
-            } else if (usedIcons[difficulty][index] === 'some') {
-                iconOption.classList.add('some-found');
-            } else {
-                iconOption.classList.add('not-found');
-            }
+
+        // Get status for this icon (index)
+        const iconStatus = usedIcons[difficulty] ? usedIcons[difficulty][index] : undefined; 
+
+        if (iconStatus === 'all') {
+            iconOption.classList.add('all-found');
+        } else if (iconStatus === 'some') {
+            iconOption.classList.add('some-found');
+        } else if (iconStatus === 'none') {
+            iconOption.classList.add('not-found');
         }
+        // If iconStatus is undefined (e.g., icon not tried yet), no additional class is added.
+        
         iconSelectorElement.appendChild(iconOption);
     });
 
@@ -195,6 +202,17 @@ function checkCombination(onlyUpdate = false) {
     let correctPositions = 0;
     const currentBoard = gameBoards[difficulty];
     const currentCombination = currentBoard.board[gameState[difficulty].currentAttempt].map(slot => slot.icon);
+
+    // Populate iconsTriedInGuesses
+    if (!currentBoard.iconsTriedInGuesses) {
+        currentBoard.iconsTriedInGuesses = [];
+    }
+    currentCombination.forEach(iconIndex => {
+        if (iconIndex !== null && !currentBoard.iconsTriedInGuesses.includes(iconIndex)) {
+            currentBoard.iconsTriedInGuesses.push(iconIndex);
+        }
+    });
+
     const secretCopy = [...currentBoard.correctCombination];
     const currentCopy = [...currentCombination];
 
@@ -242,16 +260,19 @@ function checkCombination(onlyUpdate = false) {
     }
 }
 
-function updateUsedIcons(currentCombination) { // currentCombination parameter is not strictly needed with this logic but can be kept
+function updateUsedIcons(currentCombination) { // currentCombination param can be kept for consistency, though not directly used in this exact logic
     const secret = gameBoards[difficulty].correctCombination;
-    const boardState = gameBoards[difficulty].board; // Full board state for current difficulty
-    const numAttemptsMade = gameState[difficulty].currentAttempt; // Number of attempts fully processed (checkCombination increments this)
+    const boardState = gameBoards[difficulty].board; 
+    // numAttemptsMade is not explicitly used here but logic relies on boardState being up-to-date
+    
+    // Ensure iconsTriedInGuesses exists and use a Set for efficient lookup
+    const triedIconSet = new Set(gameBoards[difficulty].iconsTriedInGuesses || []);
 
-    const newIconStatus = {}; // Object to store new statuses: { iconIndex: 'none' | 'some' | 'all' }
+    const newIconStatus = {}; // This will store statuses only for tried icons that get a specific state
 
     // 1. Count occurrences of each icon in the secret combination.
     const secretIconCounts = {};
-    if (secret && secret.length > 0) { // Ensure secret is not undefined or empty
+    if (secret && secret.length > 0) {
         for (const icon of secret) {
             secretIconCounts[icon] = (secretIconCounts[icon] || 0) + 1;
         }
@@ -262,34 +283,33 @@ function updateUsedIcons(currentCombination) { // currentCombination parameter i
     for (let i = 0; i < iconsInTheme.length; i++) {
         const iconIndex = i; // This is the actual icon value (0, 1, 2...)
 
+        // **** START: New "is tried?" check ****
+        if (!triedIconSet.has(iconIndex)) {
+            // If icon has not been tried, it will not be added to newIconStatus.
+            // The UI update part will handle clearing its old status.
+            continue; 
+        }
+        // **** END: New "is tried?" check ****
+
+        // Existing logic for determining 'none', 'all', 'some' for *tried* icons:
         if (!(iconIndex in secretIconCounts)) {
             newIconStatus[iconIndex] = 'none'; // Not in secret
-            continue;
+            continue; // Move to next icon in theme
         }
 
-        // Icon is in secret. Now check if all its instances are correctly placed.
+        // Icon is in secret and has been tried. Now check if all its instances are correctly placed.
         let countInSecretForThisIcon = secretIconCounts[iconIndex];
         let correctlyPlacedCount = 0;
 
-        // Iterate through all *positions* in the secret code (0 to difficulty-1).
         for (let k = 0; k < secret.length; k++) { // k is a position index in the combination
-            if (secret[k] === iconIndex) { // If this position in the secret holds the icon we're currently checking
-                // Now, search through all *submitted* attempts to see if this specific position (k)
-                // has been revealed with this iconIndex and marked as 'correct-position'.
+            if (secret[k] === iconIndex) { 
                 let positionRevealedCorrectly = false;
-                // numAttemptsMade is the number of attempts already evaluated.
-                // If checkCombination was called with onlyUpdate=true, currentAttempt might not have incremented yet.
-                // We should iterate up to and including the current attempt if its results are finalized.
-                // The `checkCombination` function calls `updateUsedIcons` *after* updating the board state and *before* saving.
-                // So, `gameState[difficulty].currentAttempt` might be the *next* attempt if the current one wasn't final,
-                // or it's the number of attempts *made* if the game just ended.
-                // Let's iterate up to `maxAttempts` to be safe and check boardState.
                 for (let attemptIdx = 0; attemptIdx < maxAttempts; attemptIdx++) {
                     if (boardState[attemptIdx] && boardState[attemptIdx][k] &&
                         boardState[attemptIdx][k].icon === iconIndex &&
                         boardState[attemptIdx][k].result === 'correct-position') {
                         positionRevealedCorrectly = true;
-                        break; // Found this specific secret position correctly guessed
+                        break; 
                     }
                 }
                 if (positionRevealedCorrectly) {
@@ -298,14 +318,15 @@ function updateUsedIcons(currentCombination) { // currentCombination parameter i
             }
         }
         
-        if (correctlyPlacedCount >= countInSecretForThisIcon) { // Use >= just in case of overcounting from multiple attempts (though logic should prevent)
-            newIconStatus[iconIndex] = 'all'; // All instances of this icon found
+        if (correctlyPlacedCount >= countInSecretForThisIcon) {
+            newIconStatus[iconIndex] = 'all'; 
         } else {
-            newIconStatus[iconIndex] = 'some'; // Some (or none yet) are correctly placed, but it's in the secret.
+            // It's in the secret, it's been tried, but not all instances are correctly placed.
+            newIconStatus[iconIndex] = 'some'; 
         }
     }
-    // Preserve existing statuses if not recalculated (e.g., for icons beyond current theme scope, though unlikely)
-    usedIcons[difficulty] = { ...usedIcons[difficulty], ...newIconStatus };
+    
+    usedIcons[difficulty] = newIconStatus; // Overwrite with new statuses; only tried icons will have a status.
 }
 
 function saveGameState() {
@@ -332,6 +353,10 @@ function loadGameState(savedState = null) {
 
     if (savedState[difficulty]) {
         gameBoards[difficulty] = savedState[difficulty].board;
+        // Ensure iconsTriedInGuesses is initialized if loading an old save
+        if (!gameBoards[difficulty].iconsTriedInGuesses) {
+            gameBoards[difficulty].iconsTriedInGuesses = [];
+        }
         gameState[difficulty] = savedState[difficulty].gameState;
         usedIcons[difficulty] = savedState[difficulty].usedIcons;
     } else {
@@ -340,7 +365,8 @@ function loadGameState(savedState = null) {
             board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
             completed: false,
             message: '',
-            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty),
+            iconsTriedInGuesses: [] // Also initialize here for consistency
         };
         gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
         usedIcons[difficulty] = {};
