@@ -137,7 +137,7 @@ body {
     margin-bottom: 20px;
     border: 1px solid var(--game-border-light);
     border-radius: 5px;
-    overflow: hidden;
+    overflow: auto; /* Changed from hidden to auto */
 }
 
 .calendar-header {
@@ -211,17 +211,19 @@ body {
     color: var(--game-border-light); /* Light gray for future days */
 }
 
-.calendar-days .completed-easy {
-    background-color: rgba(46, 204, 113, 0.3);
+/* Win/Loss status indicators for calendar days */
+.calendar-days .day-won {
+    background-color: rgba(46, 204, 113, 0.6); 
+    /* Consider adding color: black; or a dark color if default text becomes hard to read */
 }
 
-.calendar-days .completed-medium {
-    background-color: rgba(241, 196, 15, 0.3);
+.calendar-days .day-lost {
+    background-color: rgba(231, 76, 60, 0.6); 
+    /* Consider adding color: black; or a dark color if default text becomes hard to read */
 }
 
-.calendar-days .completed-hard {
-    background-color: rgba(231, 76, 60, 0.3);
-}
+/* Removed .guess-row rule as it's not used by elements created in JS */
+/* Old .completed-easy/medium/hard rules are fully removed now. */
 
 /* Night Mode Styles for GuessIt */
 
@@ -330,6 +332,39 @@ body.night-mode .calendar-days .future-day {
     color: #777; /* Dimmer color for future days */
 }
 
-body.night-mode .calendar-days .completed-easy { background-color: rgba(46, 204, 113, 0.5); }
-body.night-mode .calendar-days .completed-medium { background-color: rgba(241, 196, 15, 0.5); }
-body.night-mode .calendar-days .completed-hard { background-color: rgba(231, 76, 60, 0.5); }
+/* Removed all body.night-mode .calendar-days .completed-easy/medium/hard rules */
+
+/* Night mode variants for win/loss status */
+body.night-mode .calendar-days .day-won {
+    background-color: rgba(46, 204, 113, 0.7);
+    color: #fff; /* Ensure text is white and readable */
+}
+
+body.night-mode .calendar-days .day-lost {
+    background-color: rgba(231, 76, 60, 0.7);
+    color: #fff; /* Ensure text is white and readable */
+}
+
+/* Media Query for Calendar Responsiveness on Small Screens */
+@media (max-width: 400px) {
+    .calendar-header {
+        padding: 5px; /* Reduced padding */
+        font-size: 0.9em; /* Reduced font size for month/year text */
+    }
+
+    .calendar-header button {
+        padding: 3px 6px; /* Reduced padding for buttons */
+        font-size: 0.9em; /* Reduced font size for buttons */
+    }
+
+    .calendar-weekdays div {
+        padding: 2px; /* Reduced padding */
+        font-size: 0.75em; /* Reduced font size */
+    }
+
+    .calendar-days div {
+        padding: 3px; /* Reduced padding */
+        font-size: 0.8em; /* Reduced font size */
+    }
+}
+/* This is the end of the SEARCH block. Ensure the REPLACE block starts below. */

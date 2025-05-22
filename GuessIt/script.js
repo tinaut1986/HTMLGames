@@ -86,7 +86,8 @@ function initializeGame(selectToday) {
             board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
             completed: false,
             message: '',
-            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty),
+            iconsTriedInGuesses: [] // New property initialized
         };
         gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
         usedIcons[difficulty] = {};
@@ -100,7 +101,7 @@ function updateUI() {
     iconSelectorElement.innerHTML = '';
 
     // Configurar la cuadrícula del tablero de juego
-    gameBoardElement.style.gridTemplateColumns = `repeat(${difficulty}, 1fr)`;
+    gameBoardElement.style.gridTemplateColumns = `repeat(${difficulty}, auto)`;
 
     const currentBoard = gameBoards[difficulty];
     // Iterar sobre los intentos
@@ -133,21 +134,27 @@ function updateUI() {
     iconSelectorElement.style.gridTemplateColumns = `repeat(${Math.ceil(availableIcons / 3)}, 1fr)`;
 
     const icons = iconThemes[currentTheme].slice(0, availableIcons);
-    icons.forEach((icon, index) => {
+    icons.forEach((iconName, index) => { // Assuming 'iconName' is the actual name/char, 'index' is the icon's numerical ID
         const iconOption = document.createElement('div');
-        iconOption.className = 'icon-option';
-        iconOption.innerHTML = renderIcon(index);
+        
+        // Reset classes: start with base class only
+        iconOption.className = 'icon-option'; 
+        
+        iconOption.innerHTML = renderIcon(index); // 'index' is used as the icon identifier
         iconOption.onclick = () => selectIcon(index);
-        // Marcar iconos según su estado
-        if (usedIcons[difficulty] && usedIcons[difficulty][index]) {
-            if (usedIcons[difficulty][index] === 'all') {
-                iconOption.classList.add('all-found');
-            } else if (usedIcons[difficulty][index] === 'some') {
-                iconOption.classList.add('some-found');
-            } else {
-                iconOption.classList.add('not-found');
-            }
+
+        // Get status for this icon (index)
+        const iconStatus = usedIcons[difficulty] ? usedIcons[difficulty][index] : undefined; 
+
+        if (iconStatus === 'all') {
+            iconOption.classList.add('all-found');
+        } else if (iconStatus === 'some') {
+            iconOption.classList.add('some-found');
+        } else if (iconStatus === 'none') {
+            iconOption.classList.add('not-found');
         }
+        // If iconStatus is undefined (e.g., icon not tried yet), no additional class is added.
+        
         iconSelectorElement.appendChild(iconOption);
     });
 
@@ -195,6 +202,17 @@ function checkCombination(onlyUpdate = false) {
     let correctPositions = 0;
     const currentBoard = gameBoards[difficulty];
     const currentCombination = currentBoard.board[gameState[difficulty].currentAttempt].map(slot => slot.icon);
+
+    // Populate iconsTriedInGuesses
+    if (!currentBoard.iconsTriedInGuesses) {
+        currentBoard.iconsTriedInGuesses = [];
+    }
+    currentCombination.forEach(iconIndex => {
+        if (iconIndex !== null && !currentBoard.iconsTriedInGuesses.includes(iconIndex)) {
+            currentBoard.iconsTriedInGuesses.push(iconIndex);
+        }
+    });
+
     const secretCopy = [...currentBoard.correctCombination];
     const currentCopy = [...currentCombination];
 
@@ -242,32 +260,73 @@ function checkCombination(onlyUpdate = false) {
     }
 }
 
-function updateUsedIcons(currentCombination) {
-    // Inicializar el conteo de iconos en la combinación secreta
-    const iconCounts = {};
-    gameBoards[difficulty].correctCombination.forEach((icon, index) => {
-        iconCounts[icon] = (iconCounts[icon] || 0) + 1;
-    });
+function updateUsedIcons(currentCombination) { // currentCombination param can be kept for consistency, though not directly used in this exact logic
+    const secret = gameBoards[difficulty].correctCombination;
+    const boardState = gameBoards[difficulty].board; 
+    // numAttemptsMade is not explicitly used here but logic relies on boardState being up-to-date
+    
+    // Ensure iconsTriedInGuesses exists and use a Set for efficient lookup
+    const triedIconSet = new Set(gameBoards[difficulty].iconsTriedInGuesses || []);
 
-    // Inicializar usedIcons para la dificultad actual si no existe
-    if (!usedIcons[difficulty]) {
-        usedIcons[difficulty] = {};
+    const newIconStatus = {}; // This will store statuses only for tried icons that get a specific state
+
+    // 1. Count occurrences of each icon in the secret combination.
+    const secretIconCounts = {};
+    if (secret && secret.length > 0) {
+        for (const icon of secret) {
+            secretIconCounts[icon] = (secretIconCounts[icon] || 0) + 1;
+        }
     }
 
-    // Procesar cada icono en la combinación actual
-    currentCombination.forEach((icon, index) => {
-        if (gameBoards[difficulty].correctCombination[index] === icon) {
-            // El icono está en la posición correcta
-            usedIcons[difficulty][icon] = 'all';
-            iconCounts[icon]--;
-        } else if (iconCounts[icon] > 0) {
-            // El icono está presente pero en posición incorrecta
-            usedIcons[difficulty][icon] = usedIcons[difficulty][icon] === 'all' ? 'all' : 'some';
-        } else if (!usedIcons[difficulty][icon]) {
-            // El icono no está presente en la combinación secreta
-            usedIcons[difficulty][icon] = 'none';
+    // 2. For each icon type available in the current theme:
+    const iconsInTheme = iconThemes[currentTheme].slice(0, difficulty * 3);
+    for (let i = 0; i < iconsInTheme.length; i++) {
+        const iconIndex = i; // This is the actual icon value (0, 1, 2...)
+
+        // **** START: New "is tried?" check ****
+        if (!triedIconSet.has(iconIndex)) {
+            // If icon has not been tried, it will not be added to newIconStatus.
+            // The UI update part will handle clearing its old status.
+            continue; 
         }
-    });
+        // **** END: New "is tried?" check ****
+
+        // Existing logic for determining 'none', 'all', 'some' for *tried* icons:
+        if (!(iconIndex in secretIconCounts)) {
+            newIconStatus[iconIndex] = 'none'; // Not in secret
+            continue; // Move to next icon in theme
+        }
+
+        // Icon is in secret and has been tried. Now check if all its instances are correctly placed.
+        let countInSecretForThisIcon = secretIconCounts[iconIndex];
+        let correctlyPlacedCount = 0;
+
+        for (let k = 0; k < secret.length; k++) { // k is a position index in the combination
+            if (secret[k] === iconIndex) { 
+                let positionRevealedCorrectly = false;
+                for (let attemptIdx = 0; attemptIdx < maxAttempts; attemptIdx++) {
+                    if (boardState[attemptIdx] && boardState[attemptIdx][k] &&
+                        boardState[attemptIdx][k].icon === iconIndex &&
+                        boardState[attemptIdx][k].result === 'correct-position') {
+                        positionRevealedCorrectly = true;
+                        break; 
+                    }
+                }
+                if (positionRevealedCorrectly) {
+                    correctlyPlacedCount++;
+                }
+            }
+        }
+        
+        if (correctlyPlacedCount >= countInSecretForThisIcon) {
+            newIconStatus[iconIndex] = 'all'; 
+        } else {
+            // It's in the secret, it's been tried, but not all instances are correctly placed.
+            newIconStatus[iconIndex] = 'some'; 
+        }
+    }
+    
+    usedIcons[difficulty] = newIconStatus; // Overwrite with new statuses; only tried icons will have a status.
 }
 
 function saveGameState() {
@@ -294,6 +353,10 @@ function loadGameState(savedState = null) {
 
     if (savedState[difficulty]) {
         gameBoards[difficulty] = savedState[difficulty].board;
+        // Ensure iconsTriedInGuesses is initialized if loading an old save
+        if (!gameBoards[difficulty].iconsTriedInGuesses) {
+            gameBoards[difficulty].iconsTriedInGuesses = [];
+        }
         gameState[difficulty] = savedState[difficulty].gameState;
         usedIcons[difficulty] = savedState[difficulty].usedIcons;
     } else {
@@ -302,7 +365,8 @@ function loadGameState(savedState = null) {
             board: Array(maxAttempts).fill().map(() => Array(difficulty).fill(null)),
             completed: false,
             message: '',
-            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty)
+            correctCombination: generateSecretCombinationForDate(selectedDate, difficulty),
+            iconsTriedInGuesses: [] // Also initialize here for consistency
         };
         gameState[difficulty] = { currentAttempt: 0, currentPosition: 0 };
         usedIcons[difficulty] = {};
@@ -382,8 +446,16 @@ function updateCalendar() {
 
             // Verificar el estado del juego para este día y dificultad
             const savedState = JSON.parse(localStorage.getItem(`gameState_${dateString}`) || '{}');
-            if (savedState[difficulty] && savedState[difficulty].board.completed) {
-                dayElement.classList.add('completed');
+            // Remove generic 'completed' or difficulty-specific completed classes for win/loss
+            dayElement.classList.remove('completed', 'completed-easy', 'completed-medium', 'completed-hard');
+
+            if (savedState[difficulty] && savedState[difficulty].board && savedState[difficulty].board.completed) {
+                const message = savedState[difficulty].board.message;
+                if (message && message.includes('¡Felicidades!')) {
+                    dayElement.classList.add('day-won');
+                } else if (message && message.includes('Se acabaron los intentos')) {
+                    dayElement.classList.add('day-lost');
+                }
             }
         } else {
             dayElement.classList.add('future-day');
