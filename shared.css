@@ -94,7 +94,7 @@ body.night-mode #nightModeToggle:hover {
 .back-to-menu-button {
     display: inline-block;
     padding: 8px 15px; /* Slightly less padding than std-button for a less prominent look */
-    margin: 10px 0; /* Consistent margin for spacing */
+    margin: 10px 10px 15px 10px; /* top, right, bottom, left margins */
     background-color: #e0e0e0; /* Light grey - distinct from game buttons */
     color: #333333; /* Dark text */
     text-decoration: none;
