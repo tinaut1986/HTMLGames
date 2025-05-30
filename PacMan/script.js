@@ -7,8 +7,9 @@ const difficultySelect = document.getElementById('difficulty');
 const difficultyLabelEl = document.getElementById('difficulty-label');
 const gameOverMessageEl = document.getElementById('gameOverMessage');
 const livesCountEl = document.getElementById('livesCount');
+const mobileControlsContainer = document.querySelector('.mobile-controls'); // Selector for the container
 
-// Mobile Controls (optional, if you implement them)
+// Mobile Controls Buttons (already defined in previous steps, ensure they are correctly selected if needed by other logic)
 const btnUp = document.getElementById('btnUp');
 const btnLeft = document.getElementById('btnLeft');
 const btnRight = document.getElementById('btnRight');
@@ -22,7 +23,7 @@ const PELLET_COLOR = '#FFB8AE';
 const POWER_PELLET_COLOR = '#FFE0B2';
 const PELLET_RADIUS = 3;
 const POWER_PELLET_RADIUS = 7;
-const FRIGHTENED_COLOR = '#2980B9'; // Distinct blue for frightened ghosts
+const FRIGHTENED_COLOR = '#2980B9'; 
 const POINTS_FOR_EATING_GHOST = 200;
 
 const ROWS = 30;
@@ -42,7 +43,7 @@ let highScores = {};
 const localStorageKey = 'pacmanHighScores';
 
 // Maze definition
-const maze_template = [ // Renamed to maze_template for clarity on reset
+const maze_template = [ 
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
@@ -74,11 +75,12 @@ const maze_template = [ // Renamed to maze_template for clarity on reset
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-let maze = JSON.parse(JSON.stringify(maze_template)); // Working copy of the maze
+let maze = JSON.parse(JSON.stringify(maze_template)); 
 
 
 const pacman = {
-    x: 13, y: 23, radius: GRID_SIZE / 2 - 2, speed: 1, dx: 0, dy: 0,
+    x: 13, y: 22, 
+    radius: GRID_SIZE / 2 - 2, speed: 1, dx: 0, dy: 0,
     nextDx: 0, nextDy: 0, rotation: 0, nextRotation: 0,
     mouthOpenValue: Math.PI / 4, mouthAngle: 0.05,
     mouthChangeDirection: 1, mouthChangeSpeed: 0.07,
@@ -98,6 +100,10 @@ let isGameOver = false;
 let gameLoopInterval;
 let totalPelletCount = 0;
 let temporaryEnterListener = null; 
+
+function isTouchDevice() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+}
 
 function loadHighScores() {
     const storedScores = localStorage.getItem(localStorageKey);
@@ -121,13 +127,13 @@ function updateHighScoreDisplay() {
 }
 
 function createGhosts() {
-    ghosts.forEach(ghost => { // Clear any existing respawn timeouts
+    ghosts.forEach(ghost => { 
         if (ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId);
     });
     ghosts = [];
     GHOST_START_POSITIONS.forEach(config => {
         ghosts.push({
-            ...config, // spread initial config
+            ...config, 
             x: config.x, y: config.y, startX: config.x, startY: config.y,
             radius: GRID_SIZE / 2 - 2, speed: 1, 
             isFrightened: false, frightenedTimer: 0, isVisible: true,
@@ -138,7 +144,7 @@ function createGhosts() {
 
 function initializeBoard() {
     totalPelletCount = 0;
-    maze = JSON.parse(JSON.stringify(maze_template)); // Reset maze from template
+    maze = JSON.parse(JSON.stringify(maze_template)); 
     const powerPelletLocations = [{r:3, c:1}, {r:3, c:26}, {r:23, c:1}, {r:23, c:26}];
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -210,12 +216,12 @@ function checkEating() {
         maze[pacman.y][pacman.x] = 0; score += 50; totalPelletCount--; currentScoreEl.textContent = score;
         console.log("Power Pellet Eaten! Duration:", currentDifficultySettings.powerPelletDuration);
         ghosts.forEach(ghost => {
-            if (ghost.isVisible) { // Only affect visible, non-eaten ghosts
+            if (ghost.isVisible) { 
                 ghost.isFrightened = true;
                 ghost.frightenedTimer = currentDifficultySettings.powerPelletDuration;
-                if (ghost.dx !== 0 || ghost.dy !== 0) { // Reverse direction if moving
+                if (ghost.dx !== 0 || ghost.dy !== 0) { 
                     ghost.dx *= -1; ghost.dy *= -1;
-                } else { // If static, assign a random valid direction
+                } else { 
                     const validMoves = [];
                     const gX = Math.floor(ghost.x), gY = Math.floor(ghost.y);
                     if (gY > 0 && maze[gY-1][gX] !== 1) validMoves.push({dx:0,dy:-1});
@@ -242,11 +248,8 @@ function updateGhosts() {
             ghost.frightenedTimer -= currentDifficultySettings.gameSpeed;
             if (ghost.frightenedTimer <= 0) {
                 ghost.isFrightened = false;
-                // Find original config for this ghost to reset color if needed, though drawing handles it.
-                // Speed reset would happen here if we changed it.
             }
         }
-        // Movement logic (same for frightened for now, can be different)
         const currentGridX = Math.floor(ghost.x); const currentGridY = Math.floor(ghost.y);
         const isAligned = (Math.abs(ghost.x - currentGridX) < 0.05 && Math.abs(ghost.y - currentGridY) < 0.05) ||
                           (Math.abs(ghost.x - (currentGridX + 0.5)) < 0.05 && Math.abs(ghost.y - (currentGridY + 0.5)) < 0.05);
@@ -259,7 +262,7 @@ function updateGhosts() {
         }
         if (isAligned && (wallAhead || (ghost.dx === 0 && ghost.dy === 0) || Math.random() < 0.25) ) {
             const possibleMoves = []; const validGhostTiles = [0, 2, 3, 4]; 
-            const allowReverse = ghost.isFrightened; // Frightened ghosts might reverse more freely
+            const allowReverse = ghost.isFrightened; 
             if (currentGridY > 0 && validGhostTiles.includes(maze[currentGridY - 1][currentGridX]) && (allowReverse || !(ghost.dx === 0 && ghost.dy === 1))) possibleMoves.push({dx:0, dy:-1});
             if (currentGridY < ROWS - 1 && validGhostTiles.includes(maze[currentGridY + 1][currentGridX]) && (allowReverse || !(ghost.dx === 0 && ghost.dy === -1))) possibleMoves.push({dx:0, dy:1});
             if (currentGridX > 0 && validGhostTiles.includes(maze[currentGridY][currentGridX - 1]) && (allowReverse || !(ghost.dx === 1 && ghost.dy === 0))) possibleMoves.push({dx:-1, dy:0});
@@ -292,14 +295,14 @@ function checkPacmanGhostCollision() {
                     highScores[currentDifficulty] = score; updateHighScoreDisplay(); saveHighScores();
                 }
                 ghost.isFrightened = false; ghost.isVisible = false; 
-                if(ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId); // Clear existing before setting new
+                if(ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId); 
                 ghost.respawnTimeoutId = setTimeout(() => {
                     ghost.x = ghost.startX; ghost.y = ghost.startY; 
                     ghost.isVisible = true; 
                     const originalConfig = GHOST_START_POSITIONS.find(g => g.name === ghost.name);
                     ghost.dx = originalConfig.dx; ghost.dy = originalConfig.dy;
-                    ghost.isFrightened = false; // Ensure it's not frightened on respawn
-                }, 5000); // Respawn after 5 seconds
+                    ghost.isFrightened = false; 
+                }, 5000); 
             } else {
                 handlePacmanDeath(); return; 
             }
@@ -325,7 +328,8 @@ function handlePacmanDeath() {
 
 function resumeAfterDeath() {
     isGameOver = false; gameOverMessageEl.style.display = 'none';
-    pacman.x = 13; pacman.y = 23; pacman.dx = 0; pacman.dy = 0;
+    pacman.x = 13; pacman.y = 22; 
+    pacman.dx = 0; pacman.dy = 0;
     pacman.nextDx = 0; pacman.nextDy = 0; pacman.rotation = 0; pacman.isMoving = false;
     createGhosts(); 
     if (gameLoopInterval) clearInterval(gameLoopInterval); 
@@ -361,14 +365,14 @@ function resetGame() {
     if (temporaryEnterListener) { 
         document.removeEventListener('keydown', temporaryEnterListener); temporaryEnterListener = null;
     }
-    // Clear any active ghost respawn timeouts
     ghosts.forEach(ghost => {
         if (ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId);
     });
 
     createGhosts(); 
     pacman.lives = 3; livesCountEl.textContent = pacman.lives;
-    pacman.x = 13; pacman.y = 23; pacman.dx = 0; pacman.dy = 0;
+    pacman.x = 13; pacman.y = 22; 
+    pacman.dx = 0; pacman.dy = 0;
     pacman.nextDx = 0; pacman.nextDy = 0; pacman.rotation = 0; pacman.isMoving = false;
     pacman.mouthAngle = 0.05; 
     score = 0; currentScoreEl.textContent = score;
@@ -385,6 +389,18 @@ function init() {
     currentDifficultySettings = DIFFICULTIES[currentDifficulty];
     const selectedOption = difficultySelect.options[difficultySelect.selectedIndex];
     if (selectedOption) difficultyLabelEl.textContent = selectedOption.text;
+    
+    // Mobile controls display logic
+    if (mobileControlsContainer) {
+        if (isTouchDevice()) {
+            mobileControlsContainer.style.display = 'flex';
+        } else {
+            mobileControlsContainer.style.display = 'none';
+        }
+    } else {
+        console.error("Mobile controls container '.mobile-controls' not found.");
+    }
+
     difficultySelect.addEventListener('change', handleDifficultyChange);
     document.addEventListener('keydown', handleKeyDown);
     resetGame(); 
@@ -430,17 +446,14 @@ function drawGame() {
         const eyeOffsetY = -ghost.radius / 5;
 
         if (ghost.isFrightened) {
-            // Simple scared eyes: larger white circles, no pupils or tiny centered pupils
             const scaredEyeRadius = eyeRadiusBase * 1.2;
             ctx.beginPath(); ctx.arc(ghostRenderX - eyeOffsetX, ghostRenderY + eyeOffsetY, scaredEyeRadius, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(ghostRenderX + eyeOffsetX, ghostRenderY + eyeOffsetY, scaredEyeRadius, 0, Math.PI * 2); ctx.fill();
-            // Optional: tiny pupils for scared eyes
             ctx.fillStyle = 'black';
             const scaredPupilRadius = scaredEyeRadius / 3;
             ctx.beginPath();ctx.arc(ghostRenderX - eyeOffsetX, ghostRenderY + eyeOffsetY, scaredPupilRadius, 0, Math.PI*2);ctx.fill();
             ctx.beginPath();ctx.arc(ghostRenderX + eyeOffsetX, ghostRenderY + eyeOffsetY, scaredPupilRadius, 0, Math.PI*2);ctx.fill();
         } else {
-            // Normal eyes
             ctx.beginPath(); ctx.arc(ghostRenderX - eyeOffsetX, ghostRenderY + eyeOffsetY, eyeRadiusBase, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(ghostRenderX + eyeOffsetX, ghostRenderY + eyeOffsetY, eyeRadiusBase, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = 'black'; 
@@ -454,3 +467,5 @@ function drawGame() {
 }
 
 init();
+
+[end of PacMan/script.js]
