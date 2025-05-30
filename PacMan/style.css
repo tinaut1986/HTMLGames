@@ -1,0 +1,146 @@
+/* PacMan Specific Styles */
+body {
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.game-container {
+    text-align: center;
+    background-color: #fff; /* Light mode game container background */
+    padding: 15px; /* Slightly reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    margin: 15px auto; /* Centering with less margin */
+    max-width: 500px; /* Constrain width for PacMan layout */
+}
+
+h1 {
+    margin-top: 0;
+    color: #333; /* Handled by shared.css in night mode */
+    font-size: 1.8em; /* Slightly smaller h1 */
+    text-transform: uppercase; /* Arcade feel */
+}
+
+.controls, .scores, #livesContainer {
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #555;
+    font-weight: bold; /* Better readability */
+}
+
+.scores span, #livesContainer span {
+    margin: 0 8px;
+}
+
+/* Specific styling for score and lives numbers */
+#current-score, #high-score, #livesCount {
+    color: #FFFF00; /* Yellow, classic Pac-Man score color */
+    background-color: #111; /* Dark background for the numbers to pop */
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace; /* Give numbers a more digital feel */
+}
+
+#difficulty {
+    margin-left: 5px; /* Space from label */
+}
+
+#gameCanvas {
+    border: 2px solid #0000AA; /* Pac-Man blue border */
+    background-color: #000; /* Black background for the game */
+    display: block;
+    margin: 0 auto;
+    max-width: 100%; /* Responsive canvas */
+}
+
+.game-over-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: yellow; /* Pac-Man style text */
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold; /* Make it pop */
+    z-index: 10;
+    text-align: center;
+}
+
+.mobile-controls {
+    margin-top: 15px;
+    display: none; /* Hidden by default, shown via JS (isTouchDevice) */
+    flex-direction: column;
+    align-items: center;
+}
+
+.mobile-controls div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 5px 0;
+    gap: 20px;
+}
+
+.mobile-controls button {
+    font-size: 1.5em; /* Larger for better tap targets */
+    padding: 18px 28px; /* Increased padding */
+    min-width: 60px; /* Ensure decent width */
+    border: 2px solid #555; /* More distinct border */
+    background-color: #f0f0f0; /* Light grey */
+    color: #222; /* Darker text */
+    border-radius: 8px; /* Slightly more rounded */
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+}
+
+.mobile-controls button:active {
+    background-color: #d0d0d0;
+}
+
+/* Night Mode Styles for PacMan */
+body.night-mode .game-container {
+    background-color: #1e1e1e;
+    color: #e0e0e0; /* General text color in night mode for game container */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* h1 color is handled by shared.css for night mode */
+
+body.night-mode .controls,
+body.night-mode .scores,
+body.night-mode #livesContainer {
+    color: #b0b0b0; /* Lighter text for controls/scores labels in night mode */
+}
+
+body.night-mode #current-score,
+body.night-mode #high-score,
+body.night-mode #livesCount {
+    color: #FFFF00; /* Yellow text still good */
+    background-color: #333; /* Slightly lighter dark background for night mode numbers */
+}
+
+body.night-mode #gameCanvas {
+    border-color: #3333FF; /* Brighter blue for night mode border */
+}
+
+body.night-mode .game-over-message {
+    background-color: rgba(0, 0, 0, 0.85); /* Darker, more opaque background */
+    color: yellow; /* Keep yellow text for Pac-Man theme consistency */
+}
+
+body.night-mode .mobile-controls button {
+    border-color: #777;
+    background-color: #4f4f4f; /* Darker buttons */
+    color: #eee; /* Light text */
+}
+
+body.night-mode .mobile-controls button:active {
+    background-color: #666;
+}

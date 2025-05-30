@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pac-Man</title>
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <a href="../index.html" class="back-to-menu-button">Volver al Menú</a>
+        <h1>Pac-Man</h1>
+        <button id="nightModeToggle" aria-label="Change night/day mode"><i class="fas fa-moon"></i></button>
+        <div class="controls">
+            <label for="difficulty">Dificultad:</label>
+            <select id="difficulty">
+                <option value="easy" selected>Fácil</option>
+                <option value="medium">Medio</option>
+                <option value="hard">Difícil</option>
+            </select>
+        </div>
+        <div class="scores">
+            <span>Puntuación: <span id="current-score">0</span></span>
+            <span>Máx (<span id="difficulty-label">Fácil</span>): <span id="high-score">0</span></span>
+        </div>
+        <canvas id="gameCanvas" width="448" height="576"></canvas> <!-- Standard Pac-Man arcade resolution proportion -->
+        <div id="gameOverMessage" class="game-over-message" style="display: none;">
+             ¡Has perdido! Toca/Pulsa Enter para reiniciar.
+        </div>
+        <div id="livesContainer">
+            Vidas: <span id="livesCount">3</span>
+        </div>
+        <div class="mobile-controls">
+             <button id="btnUp">▲</button>
+             <div>
+                 <button id="btnLeft">◀</button>
+                 <button id="btnRight">▶</button>
+             </div>
+             <button id="btnDown">▼</button>
+        </div>
+    </div>
+
+    <script src="../script.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>
