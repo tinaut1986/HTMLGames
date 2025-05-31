@@ -16,14 +16,14 @@ const btnRight = document.getElementById('btnRight');
 const btnDown = document.getElementById('btnDown');
 
 // Game constants
-const GRID_SIZE = 16; 
+const GRID_SIZE = 16;
 const PACMAN_COLOR = 'yellow';
-const WALL_COLOR = '#1919A6'; 
+const WALL_COLOR = '#1919A6';
 const PELLET_COLOR = '#FFB8AE';
 const POWER_PELLET_COLOR = '#FFE0B2';
 const PELLET_RADIUS = 3;
 const POWER_PELLET_RADIUS = 7;
-const FRIGHTENED_COLOR = '#2980B9'; 
+const FRIGHTENED_COLOR = '#2980B9';
 const POINTS_FOR_EATING_GHOST = 200;
 
 const ROWS = 30;
@@ -35,7 +35,7 @@ const DIFFICULTIES = {
     medium: { gameSpeed: 150, ghostSpeedMultiplier: 0.85, powerPelletDuration: 6000 },
     hard: { gameSpeed: 120, ghostSpeedMultiplier: 1.0, powerPelletDuration: 4000 }
 };
-let currentDifficulty = 'easy'; 
+let currentDifficulty = 'easy';
 let currentDifficultySettings = DIFFICULTIES[currentDifficulty];
 
 // High Score Management
@@ -43,7 +43,7 @@ let highScores = {};
 const localStorageKey = 'pacmanHighScores';
 
 // Maze definition
-const maze_template = [ 
+const maze_template = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
@@ -55,18 +55,18 @@ const maze_template = [
     [1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1],
     [1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1],
-    [1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1], 
+    [1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1],
     [1,1,1,1,1,1,0,1,1,0,1,1,1,4,4,1,1,1,0,1,1,0,1,1,1,1,1,1],
-    [1,1,1,1,1,1,0,1,1,0,1,4,4,4,4,4,4,1,0,1,1,0,1,1,1,1,1,1], 
-    [1,1,1,1,1,1,0,1,1,0,1,4,4,4,4,4,4,1,0,1,1,0,1,1,1,1,1,1], 
+    [1,1,1,1,1,1,0,1,1,0,1,4,4,4,4,4,4,1,0,1,1,0,1,1,1,1,1,1],
+    [1,1,1,1,1,1,0,1,1,0,1,4,4,4,4,4,4,1,0,1,1,0,1,1,1,1,1,1],
     [1,1,1,1,1,1,0,1,1,0,1,4,4,4,4,4,4,1,0,1,1,0,1,1,1,1,1,1],
     [1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1],
-    [1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1], 
+    [1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1],
     [1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
     [1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1],
-    [1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1], 
+    [1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1],
     [1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1,1],
     [1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1,1],
     [1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1],
@@ -75,11 +75,11 @@ const maze_template = [
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
-let maze = JSON.parse(JSON.stringify(maze_template)); 
+let maze = JSON.parse(JSON.stringify(maze_template));
 
 
 const pacman = {
-    x: 13, y: 22, 
+    x: 13, y: 22,
     radius: GRID_SIZE / 2 - 2, speed: 1, dx: 0, dy: 0,
     nextDx: 0, nextDy: 0, rotation: 0, nextRotation: 0,
     mouthOpenValue: Math.PI / 4, mouthAngle: 0.05,
@@ -99,7 +99,7 @@ let score = 0;
 let isGameOver = false;
 let gameLoopInterval;
 let totalPelletCount = 0;
-let temporaryEnterListener = null; 
+let temporaryEnterListener = null;
 
 function isTouchDevice() {
     return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
@@ -108,7 +108,7 @@ function isTouchDevice() {
 function loadHighScores() {
     const storedScores = localStorage.getItem(localStorageKey);
     if (storedScores) highScores = JSON.parse(storedScores);
-    else highScores = {}; 
+    else highScores = {};
     for (const diff in DIFFICULTIES) {
         if (!highScores[diff]) highScores[diff] = 0;
     }
@@ -127,15 +127,15 @@ function updateHighScoreDisplay() {
 }
 
 function createGhosts() {
-    ghosts.forEach(ghost => { 
+    ghosts.forEach(ghost => {
         if (ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId);
     });
     ghosts = [];
     GHOST_START_POSITIONS.forEach(config => {
         ghosts.push({
-            ...config, 
+            ...config,
             x: config.x, y: config.y, startX: config.x, startY: config.y,
-            radius: GRID_SIZE / 2 - 2, speed: 1, 
+            radius: GRID_SIZE / 2 - 2, speed: 1,
             isFrightened: false, frightenedTimer: 0, isVisible: true,
             respawnTimeoutId: null
         });
@@ -144,13 +144,13 @@ function createGhosts() {
 
 function initializeBoard() {
     totalPelletCount = 0;
-    maze = JSON.parse(JSON.stringify(maze_template)); 
+    maze = JSON.parse(JSON.stringify(maze_template));
     const powerPelletLocations = [{r:3, c:1}, {r:3, c:26}, {r:23, c:1}, {r:23, c:26}];
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
-            if (maze[r][c] === 0) maze[r][c] = 2; 
+            if (maze[r][c] === 0) maze[r][c] = 2;
             let isPowerPellet = powerPelletLocations.some(loc => loc.r === r && loc.c === c);
-            if (isPowerPellet) maze[r][c] = 3; 
+            if (isPowerPellet) maze[r][c] = 3;
             if (maze[r][c] === 2 || maze[r][c] === 3) totalPelletCount++;
         }
     }
@@ -164,22 +164,22 @@ function updatePacmanAnimation() {
             pacman.mouthChangeDirection *= -1;
             pacman.mouthAngle = Math.max(0, Math.min(pacman.mouthAngle, pacman.mouthOpenValue));
         }
-    } else pacman.mouthAngle = Math.PI / 12; 
+    } else pacman.mouthAngle = Math.PI / 12;
 }
 
 function handleDifficultyChange(event) {
     currentDifficulty = event.target.value;
     currentDifficultySettings = DIFFICULTIES[currentDifficulty];
-    updateHighScoreDisplay(); resetGame(); 
+    updateHighScoreDisplay(); resetGame();
 }
 
 function handleKeyDown(event) {
     const key = event.key;
-    if (isGameOver && !temporaryEnterListener) { 
+    if (isGameOver && !temporaryEnterListener) {
          if (key === 'Enter' && totalPelletCount === 0) resetGame();
          return;
     }
-    if (isGameOver && temporaryEnterListener) return; 
+    if (isGameOver && temporaryEnterListener) return;
     let intendedNewDx = pacman.nextDx; let intendedNewDy = pacman.nextDy; let newRotation = pacman.nextRotation;
     if (key === 'ArrowUp') { intendedNewDx = 0; intendedNewDy = -1; newRotation = Math.PI * 1.5; }
     else if (key === 'ArrowDown') { intendedNewDx = 0; intendedNewDy = 1; newRotation = Math.PI * 0.5; }
@@ -198,7 +198,7 @@ function movePacman() {
         }
     }
     let targetX = pacman.x + pacman.dx; let targetY = pacman.y + pacman.dy;
-    if (pacman.y === 14) { 
+    if (pacman.y === 14) {
         if (targetX < 0 && pacman.dx === -1) { pacman.x = COLS - 1; pacman.isMoving = true; return;}
         else if (targetX >= COLS && pacman.dx === 1) { pacman.x = 0; pacman.isMoving = true; return;}
     }
@@ -210,18 +210,18 @@ function movePacman() {
 
 function checkEating() {
     const tileAtPacman = maze[pacman.y][pacman.x];
-    if (tileAtPacman === 2) { 
+    if (tileAtPacman === 2) {
         maze[pacman.y][pacman.x] = 0; score += 10; totalPelletCount--; currentScoreEl.textContent = score;
-    } else if (tileAtPacman === 3) { 
+    } else if (tileAtPacman === 3) {
         maze[pacman.y][pacman.x] = 0; score += 50; totalPelletCount--; currentScoreEl.textContent = score;
         console.log("Power Pellet Eaten! Duration:", currentDifficultySettings.powerPelletDuration);
         ghosts.forEach(ghost => {
-            if (ghost.isVisible) { 
+            if (ghost.isVisible) {
                 ghost.isFrightened = true;
                 ghost.frightenedTimer = currentDifficultySettings.powerPelletDuration;
-                if (ghost.dx !== 0 || ghost.dy !== 0) { 
+                if (ghost.dx !== 0 || ghost.dy !== 0) {
                     ghost.dx *= -1; ghost.dy *= -1;
-                } else { 
+                } else {
                     const validMoves = [];
                     const gX = Math.floor(ghost.x), gY = Math.floor(ghost.y);
                     if (gY > 0 && maze[gY-1][gX] !== 1) validMoves.push({dx:0,dy:-1});
@@ -261,8 +261,8 @@ function updateGhosts() {
              }
         }
         if (isAligned && (wallAhead || (ghost.dx === 0 && ghost.dy === 0) || Math.random() < 0.25) ) {
-            const possibleMoves = []; const validGhostTiles = [0, 2, 3, 4]; 
-            const allowReverse = ghost.isFrightened; 
+            const possibleMoves = []; const validGhostTiles = [0, 2, 3, 4];
+            const allowReverse = ghost.isFrightened;
             if (currentGridY > 0 && validGhostTiles.includes(maze[currentGridY - 1][currentGridX]) && (allowReverse || !(ghost.dx === 0 && ghost.dy === 1))) possibleMoves.push({dx:0, dy:-1});
             if (currentGridY < ROWS - 1 && validGhostTiles.includes(maze[currentGridY + 1][currentGridX]) && (allowReverse || !(ghost.dx === 0 && ghost.dy === -1))) possibleMoves.push({dx:0, dy:1});
             if (currentGridX > 0 && validGhostTiles.includes(maze[currentGridY][currentGridX - 1]) && (allowReverse || !(ghost.dx === 1 && ghost.dy === 0))) possibleMoves.push({dx:-1, dy:0});
@@ -273,7 +273,7 @@ function updateGhosts() {
             } else if (ghost.dx !== 0 || ghost.dy !==0) { ghost.dx *= -1; ghost.dy *= -1; }
         }
         const nextGridX = currentGridX + ghost.dx; const nextGridY = currentGridY + ghost.dy;
-        if (ghost.dx !== 0 || ghost.dy !== 0) { 
+        if (ghost.dx !== 0 || ghost.dy !== 0) {
             if (nextGridY >= 0 && nextGridY < ROWS && nextGridX >= 0 && nextGridX < COLS &&
                 (maze[nextGridY][nextGridX] === 0 || maze[nextGridY][nextGridX] === 2 || maze[nextGridY][nextGridX] === 3 || maze[nextGridY][nextGridX] === 4)) {
                 ghost.x = nextGridX; ghost.y = nextGridY;
@@ -283,7 +283,7 @@ function updateGhosts() {
 }
 
 function checkPacmanGhostCollision() {
-    if (isGameOver && temporaryEnterListener) return; 
+    if (isGameOver) return; // Simplified condition
     for (const ghost of ghosts) {
         if (!ghost.isVisible) continue;
         const pacmanGridX = Math.floor(pacman.x); const pacmanGridY = Math.floor(pacman.y);
@@ -294,17 +294,17 @@ function checkPacmanGhostCollision() {
                 if (score > highScores[currentDifficulty]) {
                     highScores[currentDifficulty] = score; updateHighScoreDisplay(); saveHighScores();
                 }
-                ghost.isFrightened = false; ghost.isVisible = false; 
-                if(ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId); 
+                ghost.isFrightened = false; ghost.isVisible = false;
+                if(ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId);
                 ghost.respawnTimeoutId = setTimeout(() => {
-                    ghost.x = ghost.startX; ghost.y = ghost.startY; 
-                    ghost.isVisible = true; 
+                    ghost.x = ghost.startX; ghost.y = ghost.startY;
+                    ghost.isVisible = true;
                     const originalConfig = GHOST_START_POSITIONS.find(g => g.name === ghost.name);
                     ghost.dx = originalConfig.dx; ghost.dy = originalConfig.dy;
-                    ghost.isFrightened = false; 
-                }, 5000); 
+                    ghost.isFrightened = false;
+                }, 5000);
             } else {
-                handlePacmanDeath(); return; 
+                handlePacmanDeath(); return;
             }
         }
     }
@@ -312,12 +312,12 @@ function checkPacmanGhostCollision() {
 
 function handlePacmanDeath() {
     pacman.lives--; livesCountEl.textContent = pacman.lives;
-    pacman.isMoving = false; isGameOver = true; 
+    pacman.isMoving = false; isGameOver = true;
     clearInterval(gameLoopInterval);
     if (temporaryEnterListener) document.removeEventListener('keydown', temporaryEnterListener);
     temporaryEnterListener = (event) => {
         if (event.key === 'Enter') {
-            document.removeEventListener('keydown', temporaryEnterListener); temporaryEnterListener = null; 
+            document.removeEventListener('keydown', temporaryEnterListener); temporaryEnterListener = null;
             if (pacman.lives > 0) resumeAfterDeath(); else resetGame();
         }
     };
@@ -328,22 +328,23 @@ function handlePacmanDeath() {
 
 function resumeAfterDeath() {
     isGameOver = false; gameOverMessageEl.style.display = 'none';
-    pacman.x = 13; pacman.y = 22; 
+    pacman.x = 13; pacman.y = 22;
     pacman.dx = 0; pacman.dy = 0;
     pacman.nextDx = 0; pacman.nextDy = 0; pacman.rotation = 0; pacman.isMoving = false;
-    createGhosts(); 
-    if (gameLoopInterval) clearInterval(gameLoopInterval); 
+    createGhosts();
+    if (gameLoopInterval) clearInterval(gameLoopInterval);
     gameLoopInterval = setInterval(gameLoop, currentDifficultySettings.gameSpeed);
 }
 
 function gameLoop() {
     if (isGameOver && !temporaryEnterListener) return;
-    if (isGameOver && temporaryEnterListener) return;
-    movePacman(); checkEating(); updatePacmanAnimation(); 
-    updateGhosts(); checkPacmanGhostCollision(); 
+    if (isGameOver && temporaryEnterListener) return; // If waiting for Enter after death/gameover message
+
+    movePacman(); checkEating(); updatePacmanAnimation();
+    updateGhosts(); checkPacmanGhostCollision();
     drawGame();
-    if (totalPelletCount === 0 && !isGameOver) { 
-        isGameOver = true; 
+    if (totalPelletCount === 0 && !isGameOver) {
+        isGameOver = true;
         gameOverMessageEl.textContent = "¡Nivel Superado! Presiona Enter para reiniciar.";
         gameOverMessageEl.style.display = 'block';
         if (gameLoopInterval) clearInterval(gameLoopInterval);
@@ -362,25 +363,25 @@ function gameLoop() {
 function resetGame() {
     console.log("Resetting game with difficulty:", currentDifficulty, "Speed:", currentDifficultySettings.gameSpeed);
     if (gameLoopInterval) clearInterval(gameLoopInterval);
-    if (temporaryEnterListener) { 
+    if (temporaryEnterListener) {
         document.removeEventListener('keydown', temporaryEnterListener); temporaryEnterListener = null;
     }
     ghosts.forEach(ghost => {
         if (ghost.respawnTimeoutId) clearTimeout(ghost.respawnTimeoutId);
     });
 
-    createGhosts(); 
+    createGhosts();
     pacman.lives = 3; livesCountEl.textContent = pacman.lives;
-    pacman.x = 13; pacman.y = 22; 
+    pacman.x = 13; pacman.y = 22;
     pacman.dx = 0; pacman.dy = 0;
     pacman.nextDx = 0; pacman.nextDy = 0; pacman.rotation = 0; pacman.isMoving = false;
-    pacman.mouthAngle = 0.05; 
+    pacman.mouthAngle = 0.05;
     score = 0; currentScoreEl.textContent = score;
     isGameOver = false; gameOverMessageEl.style.display = 'none';
-    initializeBoard(); 
-    updateHighScoreDisplay(); 
+    initializeBoard();
+    updateHighScoreDisplay();
     gameLoopInterval = setInterval(gameLoop, currentDifficultySettings.gameSpeed);
-    drawGame(); 
+    drawGame();
 }
 
 function init() {
@@ -389,8 +390,7 @@ function init() {
     currentDifficultySettings = DIFFICULTIES[currentDifficulty];
     const selectedOption = difficultySelect.options[difficultySelect.selectedIndex];
     if (selectedOption) difficultyLabelEl.textContent = selectedOption.text;
-    
-    // Mobile controls display logic
+
     if (mobileControlsContainer) {
         if (isTouchDevice()) {
             mobileControlsContainer.style.display = 'flex';
@@ -403,21 +403,21 @@ function init() {
 
     difficultySelect.addEventListener('change', handleDifficultyChange);
     document.addEventListener('keydown', handleKeyDown);
-    resetGame(); 
+    resetGame();
 }
 
 function drawGame() {
-    ctx.fillStyle = 'black'; 
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
             const tile = maze[row][col];
             const centerX = col * GRID_SIZE + GRID_SIZE / 2; const centerY = row * GRID_SIZE + GRID_SIZE / 2;
-            if (tile === 1 || tile === 4) { 
+            if (tile === 1 || tile === 4) {
                 ctx.fillStyle = WALL_COLOR; ctx.fillRect(col * GRID_SIZE, row * GRID_SIZE, GRID_SIZE, GRID_SIZE);
-            } else if (tile === 2) { 
+            } else if (tile === 2) {
                 ctx.fillStyle = PELLET_COLOR; ctx.beginPath(); ctx.arc(centerX, centerY, PELLET_RADIUS, 0, Math.PI * 2); ctx.fill();
-            } else if (tile === 3) { 
+            } else if (tile === 3) {
                 ctx.fillStyle = POWER_PELLET_COLOR; ctx.beginPath(); ctx.arc(centerX, centerY, POWER_PELLET_RADIUS, 0, Math.PI * 2); ctx.fill();
             }
         }
@@ -431,18 +431,18 @@ function drawGame() {
     ghosts.forEach(ghost => {
         if (!ghost.isVisible) return;
         const ghostRenderX = ghost.x * GRID_SIZE + GRID_SIZE / 2; const ghostRenderY = ghost.y * GRID_SIZE + GRID_SIZE / 2;
-        
-        ctx.fillStyle = ghost.isFrightened ? FRIGHTENED_COLOR : ghost.color; 
+
+        ctx.fillStyle = ghost.isFrightened ? FRIGHTENED_COLOR : ghost.color;
         ctx.beginPath();
-        ctx.arc(ghostRenderX, ghostRenderY, ghost.radius, Math.PI, 0, false); 
+        ctx.arc(ghostRenderX, ghostRenderY, ghost.radius, Math.PI, 0, false);
         ctx.lineTo(ghostRenderX + ghost.radius, ghostRenderY + ghost.radius * 0.85);
-        ctx.lineTo(ghostRenderX, ghostRenderY + ghost.radius * 0.70); 
+        ctx.lineTo(ghostRenderX, ghostRenderY + ghost.radius * 0.70);
         ctx.lineTo(ghostRenderX - ghost.radius, ghostRenderY + ghost.radius * 0.85);
         ctx.closePath(); ctx.fill();
-        
-        ctx.fillStyle = 'white'; 
+
+        ctx.fillStyle = 'white';
         const eyeRadiusBase = ghost.radius / 3;
-        const eyeOffsetX = ghost.radius / 2.5; 
+        const eyeOffsetX = ghost.radius / 2.5;
         const eyeOffsetY = -ghost.radius / 5;
 
         if (ghost.isFrightened) {
@@ -456,10 +456,10 @@ function drawGame() {
         } else {
             ctx.beginPath(); ctx.arc(ghostRenderX - eyeOffsetX, ghostRenderY + eyeOffsetY, eyeRadiusBase, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(ghostRenderX + eyeOffsetX, ghostRenderY + eyeOffsetY, eyeRadiusBase, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = 'black'; 
+            ctx.fillStyle = 'black';
             const pupilRadius = eyeRadiusBase / 2; let pupilLookDx = ghost.dx; let pupilLookDy = ghost.dy;
-            if (pupilLookDx === 0 && pupilLookDy === 0) pupilLookDy = -1; 
-            const pupilShiftMagnitude = pupilRadius * 0.7; 
+            if (pupilLookDx === 0 && pupilLookDy === 0) pupilLookDy = -1;
+            const pupilShiftMagnitude = pupilRadius * 0.7;
             ctx.beginPath(); ctx.arc(ghostRenderX - eyeOffsetX + pupilLookDx * pupilShiftMagnitude, ghostRenderY + eyeOffsetY + pupilLookDy * pupilShiftMagnitude, pupilRadius, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(ghostRenderX + eyeOffsetX + pupilLookDx * pupilShiftMagnitude, ghostRenderY + eyeOffsetY + pupilLookDy * pupilShiftMagnitude, pupilRadius, 0, Math.PI * 2); ctx.fill();
         }
@@ -467,5 +467,3 @@ function drawGame() {
 }
 
 init();
-
-[end of PacMan/script.js]
